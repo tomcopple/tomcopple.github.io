@@ -1,0 +1,188 @@
+html, body {
+  font-family: "Noto Sans", Helvetica, Arial, sans-serif;
+  color: #515151;
+  font-weight: 400;
+}
+
+strong {
+  font-weight: 700;
+}
+
+/*
+ * Sidebar: 3 different sizes: 0-48em (768px), 48-64em (1024px), 64em+
+*/
+
+.sidebar {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: white;
+  background-color: #6a9fb5;
+}
+
+/* 18rem sidebar, slightly smaller font, content has 1rem margin */
+@media (min-width: 48em) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 18rem;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-sticky {
+    position: absolute;
+    right:  1rem;
+    bottom: 1rem;
+    left:   1rem;
+  }
+
+  .content {
+    margin-left: 19rem;
+    margin-right: 1rem;
+  }
+}
+
+/* 20rem sidebar, normal font size, 2 rem margin and max width of ?rem */
+@media (min-width: 64em) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20rem;
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  .sidebar-sticky {
+    position: absolute;
+    right:  1rem;
+    bottom: 1rem;
+    left:   1rem;
+  }
+
+  .content {
+    margin-left: 24rem;
+    margin-right: 2rem;
+    max-width: 54rem;
+  }
+}
+
+/* Sidebar links */
+.sidebar a {
+  color: #fff;
+}
+a.sidebar:hover,
+a.sidebar:focus {
+  text-decoration: underline;
+}
+
+/* Sidebar title */
+.sidebar-about h1 {
+  margin-top: 0;
+  font-family: "Noto Serif", serif;
+  font-size: 4rem;
+  color: white;
+}
+
+/* Sidebar description */
+.sidebar-description {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+
+/* Sidebar links */
+.sidebar-nav {
+  padding-left: 0;
+  font-size: 1.2rem;
+  list-style: none;
+}
+.sidebar-nav-item {
+  display: block;
+}
+
+.sidebar-nav-item.active {
+  font-weight: bold;
+}
+
+/* Content:  */
+.content {
+  padding-top:    4rem;
+  padding-bottom: 4rem;
+}
+
+/* Add bottom margin after each post on homepage*/
+.post {
+  margin-bottom: 4rem;
+}
+
+/* Links */
+a {
+  color: #6a9fb5;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: .5rem;
+  font-weight: bold;
+  line-height: 1.25;
+  color: #313131;
+}
+
+/* Date styling */
+.post-date {
+  margin-top: -.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #9a9a9a;
+}
+
+/* Tables: using bootstrap, but row height is a little too high */
+/* NB This needs some jQuery to add table class to tables... */
+.table td, .table th {
+  padding: 0.25rem 0.75rem;
+}
+
+
+
+/* Tags */
+a#tags {
+  /*background-color: white;*/
+  border: 2px solid #6a9fb5;
+  color: #6a9fb5;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.82rem;
+  border-radius: 0.625rem;
+}
+
+a:hover#tags {
+  text-decoration: underline;
+  background-color: #6a9fb5;
+  color: white;
+}
+
+/* Testing styling for the summary list of tags */
+/* Come back to this! */
+.tagRow {
+  padding: 0.5rem;
+  min-height: 9rem;
+}
+.tagRow:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+.tagRow img {
+  /*border: 1px solid black;*/
+  max-height: 12rem;
+  float: right;
+}

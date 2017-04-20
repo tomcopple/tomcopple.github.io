@@ -1,0 +1,96 @@
+---
+Categories:
+- Datasets
+Description: "Testing the lastfm API and a plotly graph"
+Tags:
+- R
+- Plotly
+- Music
+date: 2017-01-20
+title: "Some music I've been listening to"
+thumbnail: 'some-music.png'
+---
+
+This is mostly just an excuse to practise using the lastfm API and produce a graph in plotly. I track (almost) all the music I listen to through lastfm (here's my [profile](http://last.fm/user/tomcopple)), and I listen to _quite_ a lot of music. I wanted to see what I listened to most in 2016, and see if I could produce a visualisation of this. 
+
+I'm not going to show the code (because there's quite a lot of it), but might at a future date. 
+
+### Top 10 artists (by playcount)
+According to lastfm, the top 10 artists I listened to in 2016 (in terms of total songs played) are as follows:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+basedir <- "~/Dropbox/R/lastfm"
+
+library(tidyverse);library(lubridate);library(readxl);
+library(knitr);library(zoo);library(plotly)
+
+# Assuming for now that it doesn't update live. Just use this.
+# NB Don't use tidyverse for this csv, can't handle encoding. 
+lastfm <- read.csv(file.path(basedir, "tracks.csv"), 
+                   stringsAsFactors = FALSE,
+                   fileEncoding = "UTF-16LE") %>% 
+    as_data_frame()
+
+# Get the top 10
+top10 <- lastfm %>% 
+    filter(year(date) == "2016") %>% 
+    group_by(artist) %>% 
+    summarise(count = n()) %>% 
+    arrange(desc(count)) %>% 
+    head(10)
+kable(top10,
+      row.names = TRUE)
+```
+
+I know I went through periods when I listened to all of these artists, but I don't think it would have been consistent over the course of the year. This graph shows a rolling 30-day playcount for these 10 artists over the course of the year. You should be able to hover over the graph, and click on artist's name to select/deselect (might not work on mobile). 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%"}
+# Get monthly plays
+topPlot <- lastfm %>% 
+    mutate(date = date(date)) %>% 
+    filter(year(date) == "2016") %>% 
+    filter(artist %in% top10$artist) %>% 
+    select(artist, date) %>% 
+    # Get daily play counts
+    group_by(artist, date) %>% 
+    summarise(count = n()) %>% 
+    ungroup() %>% 
+    # Start getting monthly play counts; separate into columns
+    spread(key = artist, value = count, fill = 0) %>% 
+    # Add a sequence of all days in the year
+    right_join(
+        x = .,
+        y = data.frame(
+            date = seq.Date(from = as.Date("2016-01-01"),
+                            to = as.Date("2016-12-31"),
+                            by = 1)
+        ),
+        by = "date"
+    ) %>% 
+    # Gather variables back together
+    gather(., -date, key = name, value = count) %>% 
+    # Replace NAs with 0
+    mutate(count = ifelse(is.na(count), 0, count)) %>% 
+    # Group by variable and get rolling 30-day count
+    group_by(name) %>% 
+    mutate(monthlyPlays = rollsum(count, k = 30, fill = NA, align = "right")) %>% 
+    filter(!is.na(monthlyPlays)) %>% 
+    as_data_frame()
+
+topPlotGraph <- ggplot(topPlot, 
+                       aes(x = date, y = monthlyPlays, fill = name)) +
+    geom_area(alpha = 0.5, position = "dodge", size = 1.2) +
+    scale_fill_brewer("", palette = "Spectral") +
+    scale_x_date(date_labels = "%b %Y") +
+    labs(x = "", y = "Monthly playcount",
+         title = "Top 10 artists played in 2016")
+
+# ggsave(plot = topPlotGraph, filename = file.path(getwd(), "images", "testing-lastfm.png"),
+       # width = 16, height = 8, units = "cm")
+
+plotlyIt <- ggplotly(topPlotGraph)
+plotlyIt
+```
+
+<br>
+That's somewhat interesting, I obviously listen to certain artists a lot (presumably when a new album comes out), then lose interest after a while. 

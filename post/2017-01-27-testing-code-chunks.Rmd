@@ -1,0 +1,29 @@
+---
+Categories:
+Description: ""
+Tags:
+- Test
+date: 2016-01-27T13:56:07Z
+title: "testing code chunks"
+---
+
+## This is a header
+
+This is just some plain old text. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+# This is a comment
+library(tidyverse)
+x <- (2 * 2)
+print(x)
+```
+
+This is a blockquote. 
+
+>  Interesting quote
+
+
+>  Huh, fancy that
+
+
+

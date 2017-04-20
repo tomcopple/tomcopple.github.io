@@ -1,0 +1,17 @@
+---
+Categories:
+- Projects
+Description: "An interactive display of lastfm listening habits."
+Tags:
+- Music
+- Plotly
+- Shiny
+- R
+date: 2017-02-07T16:30:08Z
+title: Lastfm
+thumbnail: "some-music.png"
+draft: true
+---
+
+
+This is a test page for a potential project. 
