@@ -2,13 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.tomcopple.coffee/</loc>
+    <loc>https://tomcopple.github.io/</loc>
+    <lastmod>2017-02-05T16:14:49+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomcopple.github.io/project/trakt/</loc>
+    <lastmod>2017-02-05T16:14:49+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomcopple.github.io/2017/01/26/tennis/</loc>
+    <lastmod>2017-01-26T16:19:23+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomcopple.github.io/2017/01/20/some-music-ive-been-listening-to/</loc>
+    <lastmod>2017-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://tomcopple.github.io/about/</loc>
     <lastmod>2017-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.tomcopple.coffee/about/</loc>
-    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    <loc>https://tomcopple.github.io/2016/01/27/testing-code-chunks/</loc>
+    <lastmod>2016-01-27T13:56:07+00:00</lastmod>
   </url>
   
 </urlset>

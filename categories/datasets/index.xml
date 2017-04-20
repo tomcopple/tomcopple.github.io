@@ -2,35 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Test Site</title>
-    <link>https://tomcopple.github.io/index.xml</link>
+    <link>https://tomcopple.github.io/categories/datasets/index.xml</link>
     <description>Recent content on Test Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Feb 2017 16:14:49 +0000</lastBuildDate>
-    <atom:link href="https://tomcopple.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Trakt</title>
-      <link>https://tomcopple.github.io/project/trakt/</link>
-      <pubDate>Sun, 05 Feb 2017 16:14:49 +0000</pubDate>
-      
-      <guid>https://tomcopple.github.io/project/trakt/</guid>
-      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
-
-/BLOGDOWN-BODY-BEFORE --&gt;
-
-&lt;iframe src=&#34;https://tomcopple.shinyapps.io/traktratings/?showcase=0&#34; width=&#34;100%&#34; height=&#34;900px&#34;&gt;
-&lt;/iframe&gt;
-
-
-&lt;!-- BLOGDOWN-HEAD
-
-
-
-
-/BLOGDOWN-HEAD --&gt;
-</description>
-    </item>
+    <atom:link href="https://tomcopple.github.io/categories/datasets/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Tennis</title>
@@ -152,61 +128,6 @@
 &lt;link href=&#34;#####../content/post/2017-01-27-some-music-i-ve-been-listening-to_files/plotlyjs/plotly-htmlwidgets.css&#34; rel=&#34;stylesheet&#34; /&gt;
 &lt;script src=&#34;#####../content/post/2017-01-27-some-music-i-ve-been-listening-to_files/plotlyjs/plotly-latest.min.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;#####../content/post/2017-01-27-some-music-i-ve-been-listening-to_files/plotly-binding/plotly.js&#34;&gt;&lt;/script&gt;
-
-
-
-/BLOGDOWN-HEAD --&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://tomcopple.github.io/about/</link>
-      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://tomcopple.github.io/about/</guid>
-      <description>&lt;p&gt;This is a personal blog where I might occasionally post about things that interest me, but is mostly an opportunity to play with data and learn some basic coding.&lt;/p&gt;
-
-&lt;p&gt;I enjoy thinking, talking and writing about &lt;strong&gt;coffee&lt;/strong&gt; and messing about with &lt;strong&gt;R&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;I can be found on &lt;a href=&#34;https://twitter.com/tomcopple&#34; target=&#34;_blank&#34;&gt;Twitter&lt;/a&gt; and also &lt;a href=&#34;https://uk.linkedin.com/in/tom-copple-69a77223&#34; target=&#34;_blank&#34;&gt;LinkedIn&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p class=&#34;message&#34;&gt;
-This blog is built on &lt;a href = &#34;https://gohugo.io/&#34; target = &#34;_blank&#34;&gt;Hugo&lt;/a&gt; using the &lt;a href=&#34;https://github.com/rstudio/blogdown&#34; target = &#34;_blank&#34;&gt;blogdown&lt;/a&gt; R package, and the theme is &lt;a href = &#34;http://themes.gohugo.io/hyde/&#34; target = &#34;_blank&#34;&gt;Hyde&lt;/a&gt;.
-&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>testing code chunks</title>
-      <link>https://tomcopple.github.io/2016/01/27/testing-code-chunks/</link>
-      <pubDate>Wed, 27 Jan 2016 13:56:07 +0000</pubDate>
-      
-      <guid>https://tomcopple.github.io/2016/01/27/testing-code-chunks/</guid>
-      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
-
-/BLOGDOWN-BODY-BEFORE --&gt;
-
-&lt;div id=&#34;this-is-a-header&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;This is a header&lt;/h2&gt;
-&lt;p&gt;This is just some plain old text.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# This is a comment
-library(tidyverse)
-x &amp;lt;- (2 * 2)
-print(x)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## [1] 4&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This is a blockquote.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Interesting quote&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Huh, fancy that&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/div&gt;
-
-
-&lt;!-- BLOGDOWN-HEAD
-
 
 
 
