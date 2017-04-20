@@ -1,3 +1,5 @@
+/* New CSS file, rewritten (mostly) from scratch */
+
 html, body {
   font-family: "Noto Sans", Helvetica, Arial, sans-serif;
   color: #515151;
@@ -84,7 +86,7 @@ a.sidebar:focus {
 .sidebar-about h1 {
   margin-top: 0;
   font-family: "Noto Serif", serif;
-  font-size: 4rem;
+  font-size: 3rem;
   color: white;
 }
 
