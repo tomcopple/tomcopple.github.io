@@ -133,6 +133,7 @@ a:focus {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
+  font-family: "Noto Serif", serif;
   margin-bottom: .5rem;
   font-weight: bold;
   line-height: 1.25;
@@ -187,4 +188,18 @@ a:hover#tags {
   /*border: 1px solid black;*/
   max-height: 12rem;
   float: right;
+}
+
+
+/* Remove underline from fontawesome icon links on hover */
+a:hover.iconLink {
+  text-decoration: none;
+}
+
+/* Message class */
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  color: #717171;
+  background-color: #f9f9f9;
 }

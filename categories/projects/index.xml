@@ -2,18 +2,40 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Test Site</title>
-    <link>https://tomcopple.github.io/categories/projects/index.xml</link>
+    <link>/categories/projects/index.xml</link>
     <description>Recent content on Test Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://tomcopple.github.io/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Lastfm</title>
+      <link>/project/lastfm/</link>
+      <pubDate>Tue, 07 Feb 2017 16:30:08 +0000</pubDate>
+      
+      <guid>/project/lastfm/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;This is a test page for a potential project.&lt;/p&gt;
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
     
     <item>
       <title>Trakt</title>
-      <link>https://tomcopple.github.io/project/trakt/</link>
+      <link>/project/trakt/</link>
       <pubDate>Sun, 05 Feb 2017 16:14:49 +0000</pubDate>
       
-      <guid>https://tomcopple.github.io/project/trakt/</guid>
+      <guid>/project/trakt/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
