@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Test Site</title>
-    <link>https://tomcopple.github.io/categories/projects/index.xml</link>
+    <link>https://tomcopple.github.io/tags/coffee/index.xml</link>
     <description>Recent content on Test Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://tomcopple.github.io/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://tomcopple.github.io/tags/coffee/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Coffee</title>
@@ -41,29 +41,6 @@
 &lt;link href=&#34;#####../content/project/coffee_files/plotlyjs/plotly-htmlwidgets.css&#34; rel=&#34;stylesheet&#34; /&gt;
 &lt;script src=&#34;#####../content/project/coffee_files/plotlyjs/plotly-latest.min.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;#####../content/project/coffee_files/plotly-binding/plotly.js&#34;&gt;&lt;/script&gt;
-
-
-
-/BLOGDOWN-HEAD --&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Trakt</title>
-      <link>https://tomcopple.github.io/project/trakt/</link>
-      <pubDate>Sun, 05 Feb 2017 16:14:49 +0000</pubDate>
-      
-      <guid>https://tomcopple.github.io/project/trakt/</guid>
-      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
-
-/BLOGDOWN-BODY-BEFORE --&gt;
-
-&lt;iframe src=&#34;https://tomcopple.shinyapps.io/traktratings/?showcase=0&#34; width=&#34;100%&#34; height=&#34;900px&#34;&gt;
-&lt;/iframe&gt;
-
-
-&lt;!-- BLOGDOWN-HEAD
-
 
 
 
