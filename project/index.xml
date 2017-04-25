@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Project-rsses on Test Site</title>
-    <link>https://tomcopple.github.io/project/index.xml</link>
+    <link>/project/index.xml</link>
     <description>Recent content in Project-rsses on Test Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 24 Apr 2017 11:34:32 +0100</lastBuildDate>
-    <atom:link href="https://tomcopple.github.io/project/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Coffee</title>
-      <link>https://tomcopple.github.io/project/coffee/</link>
+      <link>/project/coffee/</link>
       <pubDate>Mon, 24 Apr 2017 11:34:32 +0100</pubDate>
       
-      <guid>https://tomcopple.github.io/project/coffee/</guid>
+      <guid>/project/coffee/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
@@ -50,11 +50,33 @@
     </item>
     
     <item>
+      <title>Lastfm</title>
+      <link>/project/lastfm/</link>
+      <pubDate>Tue, 07 Feb 2017 16:30:08 +0000</pubDate>
+      
+      <guid>/project/lastfm/</guid>
+      <description>&lt;!-- BLOGDOWN-BODY-BEFORE
+
+/BLOGDOWN-BODY-BEFORE --&gt;
+
+&lt;p&gt;This is a test page for a potential project.&lt;/p&gt;
+
+
+&lt;!-- BLOGDOWN-HEAD
+
+
+
+
+/BLOGDOWN-HEAD --&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Trakt</title>
-      <link>https://tomcopple.github.io/project/trakt/</link>
+      <link>/project/trakt/</link>
       <pubDate>Sun, 05 Feb 2017 16:14:49 +0000</pubDate>
       
-      <guid>https://tomcopple.github.io/project/trakt/</guid>
+      <guid>/project/trakt/</guid>
       <description>&lt;!-- BLOGDOWN-BODY-BEFORE
 
 /BLOGDOWN-BODY-BEFORE --&gt;
