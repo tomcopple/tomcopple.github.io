@@ -1,0 +1,48 @@
+---
+Categories:
+- ""
+Description: ""
+Tags:
+- ""
+date: 2017-04-25T16:20:48+01:00
+title: "isCoffeeSecond"
+draft: true
+---
+
+```{r setup, include = FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse);library(plotly);library(knitr);library(blogdown)
+```
+
+
+### [DRAFT - do not publish yet]
+
+Sample table:
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+read_csv("~/Dropbox/Work/coffeestats/output/allCommodities.csv") %>% 
+    group_by(commodity, year) %>%
+    summarise(totValue = sum(value)) %>% 
+    group_by(commodity) %>% 
+    summarise(avValue = mean(totValue)/1000000) %>% 
+    arrange(desc(avValue)) %>% 
+    kable(., row.names = TRUE, digits = 0, col.names = c("Commodity", "Average export value (US$ million)"), align = c("lc"), caption = "Average export value by commodity: 2012 - 2015", format.args = list(big.mark = ","))
+```
+
+
+
+Sample graph:
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, out.width = "80%", out.height = "300px"}
+# Just read data locally for now
+avShare <- read_csv("~/Dropbox/Work/coffeestats/output/avShare.csv") %>% 
+    mutate(country = ordered(country, levels = rev(country)))
+plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
+        type = "bar", orientation = "h", text = ~paste0(round(100*avShare, 1), "%"), hoverinfo = 'text', marker = list(color = "#6a9fb5")
+) %>% 
+    layout(title = "Coffee as a % of total goods exports (US dollars)",
+           yaxis = list(title = "", showline = FALSE),
+           xaxis = list(title = "(%)", dtick = 10, zeroline = FALSE),
+           margin = list(l = 80),
+           font = list(family = "sans-serif", color = "#515151"))
+
+```
+

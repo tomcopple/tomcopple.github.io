@@ -9,6 +9,7 @@ Tags:
 date: 2017-01-26T16:19:23Z
 title: "Tennis"
 thumbnail: 'tennis-thumbnail.png'
+draft: true
 ---
  
 A draft visualization inspired by the Australian Open final between Federer and Nadal.

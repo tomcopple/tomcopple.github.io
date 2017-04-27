@@ -9,6 +9,7 @@ Tags:
 date: 2017-01-20
 title: "Some music I've been listening to"
 thumbnail: 'some-music.png'
+draft: true
 ---
 
 This is mostly just an excuse to practise using the lastfm API and produce a graph in plotly. I track (almost) all the music I listen to through lastfm (here's my [profile](http://last.fm/user/tomcopple)), and I listen to _quite_ a lot of music. I wanted to see what I listened to most in 2016, and see if I could produce a visualisation of this. 

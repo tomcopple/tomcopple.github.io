@@ -19,22 +19,22 @@
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   
-  <link rel = 'stylesheet' href = "/css/default.css">
-  <link rel = "stylesheet" href = "/css/font-awesome.css">
+  <link rel = 'stylesheet' href = "https://tomcopple.github.io/css/default.css">
+  <link rel = "stylesheet" href = "https://tomcopple.github.io/css/font-awesome.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif">
 
 
   
   <script>
   $(function() {
-    $('table').addClass('table table-striped');
+    $('table').addClass('table table-striped table-sm');
     $('blockquote').addClass('blockquote');
   })
   </script>
 
   
-  <link rel="stylesheet" href="../css/tomorrow-night-eighties.css">
-  <script src="../js/highlight.pack.js"></script>
+  <link rel="stylesheet" href="https://tomcopple.github.io/css/tomorrow-night-eighties.css">
+  <script src="https://tomcopple.github.io/js/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
   
@@ -60,11 +60,14 @@ ga('send', 'pageview');
 
 	<body class="theme-base-0d ">
 		<div class="sidebar">
-  <div class="container sidebar-sticky">
+  <div class="sidebar-sticky">
     <div class="sidebar-about">
-      <a href="../"><h1>Test Site</h1></a>
+      
+      
+      <a href="https://tomcopple.github.io/"><h1>Test Site</h1></a>
+      
       <p class="sidebar-description">
-       A personal blog built on Hugo and blogdown. 
+       A personal blog. 
       </p>
     </div>
 
@@ -96,11 +99,23 @@ ga('send', 'pageview');
 			<div class="post">
 			 	<h1>About</h1>
 			  <div class="post-date">Sun, Jan 1, 2017</div>
-			      <p>This is a personal blog where I might occasionally post about things that interest me, but is mostly an opportunity to play with data and learn some basic coding.</p>
-
-<p>I enjoy thinking, talking and writing about <strong>coffee</strong> and messing about with <strong>R</strong>.</p>
-
-<p>I can be found on <a href="https://twitter.com/tomcopple" target="_blank">Twitter</a> and also <a href="https://uk.linkedin.com/in/tom-copple-69a77223" target="_blank">LinkedIn</a>.</p>
+			      <div class = "row">
+  <div class = "col-md-8">
+    <p>
+This is a personal blog where I might occasionally post about things that interest me, mostly coffee-related.
+    </p>
+    </p>
+I enjoy thinking, talking and writing about <strong>coffee</strong> and messing about with data. I was previously an Economist at the International Coffee Organization, working on market analysis and statistics. 
+    </p>
+    <p>
+I can be found on <a href = "https://twitter.com/tomcopple/" target = "_blank">Twitter</a> and also <a href = "https://uk.linkedin.com/in/tom-copple-69a77223/" target = "_blank">LinkedIn</a>.
+    </p>
+    <p>I am also available for research and consultancy work.</p>
+  </div>
+  <div class = "col-md-4">
+    <img src = "{{ .Site.BaseURL }}img/profile.jpg" alt = "profile-image" class = "img-thumbnail">
+  </div>
+</div>
 
 <p class="message">
 This blog is built on <a href = "https://gohugo.io/" target = "_blank">Hugo</a> using the <a href="https://github.com/rstudio/blogdown" target = "_blank">blogdown</a> R package, and the theme is <a href = "http://themes.gohugo.io/hyde/" target = "_blank">Hyde</a>.
