@@ -210,8 +210,8 @@ a:hover.iconLink {
 
 /* Profile picture thumbnail */
 .img-thumbnail {
-  width: 100px;
-  height:100px;
+  /*width: 80%;*/
+  /*height:80%;*/
   border-radius: 50%;
   /*margin:0 auto;*/
   /*align:"middle";*/
@@ -219,9 +219,13 @@ a:hover.iconLink {
 
 /* Alternative way */
 /*.profileImage {
-  width: 100px;
-  height:100px;
-  border-radius: 50%;
-  margin:auto;
+  max-width:100%;
+  width:100%;
+  height:auto;
+  display:block;
+  padding-top:100%;
+  border-radius:50%;
+  background-size:100%;
+
   background-image: url(/img/profile.jpg)
 }*/
