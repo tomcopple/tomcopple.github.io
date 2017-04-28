@@ -45,7 +45,7 @@ plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
 ```
 
 Sample map:
-```{r, echo = F, warning=F, error=F, message = F}
+```{r, include=F}
 library(leaflet);library(rgdal)
 # For some reason this works, doesn't otherwise. 
 world_spdf <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")), layer = "TM_WORLD_BORDERS_SIMPL-0.3")
@@ -117,6 +117,7 @@ devMap <- data_frame(country = c(lowIncome, lowerMiddleIncome, upperMiddleIncome
 devMap <- full_join(data_frame(country = world_spdf$NAME), devMap)
 world_spdf$devGroup <- devMap$devGroup
 pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), world_spdf$devGroup)
+popupText <- paste0(world_spdf$NAME, ": ", factor(world_spdf$devGroup, labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income")))
 ```
 
 ```{r, echo=F, message=F, warning=F, error=F, out.width="100%", out.height = "300px"}
@@ -124,11 +125,12 @@ leaflet(world_spdf) %>%
     addTiles() %>% 
     setView(lat = 17, lng = -12, zoom = 1) %>% 
     addPolygons(stroke = TRUE, color = "#515151", weight = 1,
-                fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(devGroup)) %>% 
+                fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(devGroup),
+                popup = htmltools::htmlEscape(popupText)) %>% 
     addLegend(position = "bottomleft",
-              colors = c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"),
+              colors = c("#7882c0", "#ffe090", "#ffa590", "#6a9eb5"),
               values = world_spdf$devGroup,
-              labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income"))
+              labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income")) 
 ```
 
 
