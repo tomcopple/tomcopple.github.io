@@ -5,18 +5,18 @@ Description: ""
 Tags:
 - ""
 date: 2017-04-25T16:20:48+01:00
-title: "isCoffeeSecond"
+title: "Is coffee the second most traded commodity in the world?"
 draft: true
 ---
 
 ```{r setup, include = FALSE, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse);library(plotly);library(knitr);library(blogdown)
+basedir <- "~/Dropbox/Work/coffeestats"
 ```
-
 
 ### [DRAFT - do not publish yet]
 
-Sample table:
+Sample table of commodities by value:
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 read_csv("~/Dropbox/Work/coffeestats/output/allCommodities.csv") %>% 
     group_by(commodity, year) %>%
@@ -27,11 +27,9 @@ read_csv("~/Dropbox/Work/coffeestats/output/allCommodities.csv") %>%
     kable(., row.names = TRUE, digits = 0, col.names = c("Commodity", "Average export value (US$ million)"), align = c("lc"), caption = "Average export value by commodity: 2012 - 2015", format.args = list(big.mark = ","))
 ```
 
+Sample graph of coffee as a percentage of all exports:
 
-
-Sample graph:
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, out.width = "80%", out.height = "300px"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, out.width = "100%", out.height = "300px"}
 # Just read data locally for now
 avShare <- read_csv("~/Dropbox/Work/coffeestats/output/avShare.csv") %>% 
     mutate(country = ordered(country, levels = rev(country)))
@@ -45,4 +43,92 @@ plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
            font = list(family = "sans-serif", color = "#515151"))
 
 ```
+
+Sample map:
+```{r, echo = F, warning=F, error=F, message = F}
+library(leaflet);library(rgdal)
+# For some reason this works, doesn't otherwise. 
+world_spdf <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")), layer = "TM_WORLD_BORDERS_SIMPL-0.3")
+
+# Need to change some country names
+world_spdf$NAME <- gsub("Burma", "Myanmar", world_spdf$NAME)
+world_spdf$NAME <- gsub("Iran \\(Islamic Republic of\\)", "Iran", world_spdf$NAME)
+world_spdf$NAME <- gsub("Korea, Democratic People's Republic of", "North Korea", world_spdf$NAME)
+world_spdf$NAME <- gsub("Korea, Republic of", "South Korea", world_spdf$NAME)
+world_spdf$NAME <- gsub("Lao People's Democratic Republic", "Laos", world_spdf$NAME)
+world_spdf$NAME <- gsub("Libyan Arab Jamahiriya", "Libya", world_spdf$NAME)
+world_spdf$NAME <- gsub("The former Yugoslav Republic of Macedonia", "Macedonia", world_spdf$NAME)
+world_spdf$NAME <- gsub("United Republic of Tanzania", "Tanzania", world_spdf$NAME)
+world_spdf$NAME <- gsub("Syrian Arab Republic", "Syria", world_spdf$NAME)
+world_spdf$NAME <- gsub("Viet Nam", "Vietnam", world_spdf$NAME)
+
+
+# Need to do some tidying to allCommodities 
+allCommodities <- read_csv(file.path(basedir, "output", "allCommodities.csv"))
+allCommoditiesClean <- allCommodities %>%
+    mutate(country = case_when(
+        grepl("Bolivia", .$country) ~ "Bolivia",
+        grepl("Czechia", .$country) ~ "Czech Republic", 
+        grepl("Hong Kong", .$country) ~ "Hong Kong", 
+        grepl("Macao", .$country) ~ "Macao",
+        grepl("Macedonia", .$country) ~ "Macedonia", 
+        grepl("Rep. of Korea", .$country) ~ "South Korea", 
+        grepl("Viet Nam", .$country) ~ "Vietnam",
+        grepl("Dominican Rep.", .$country) ~ "Dominican Republic",
+        grepl("Tanzania", .$country) ~ "Tanzania",
+        grepl("Ivoire", .$country) ~ "Cote d'Ivoire",
+        grepl("Central African", .$country) ~ "Central African Republic",
+        grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina", 
+        
+        grepl("Other Asia", .$country) ~ "Taiwan",
+        TRUE ~ .$country
+    ))
+
+# Create vectors of income class (copied from World Bank, https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups)
+lowIncome <- c("Afghanistan", "Guinea", "Rwanda", "Benin", "Guinea-Bissau", "Senegal", "Burkina Faso", "Haiti", "Sierra Leone", "Burundi", "North Korea", "Somalia", "Central African Republic", "Liberia", "South Sudan", "Chad", "Madagascar", "Tanzania", "Comoros", "Malawi", "Togo", "Congo, Dem. Rep", "Mali", "Uganda", "Eritrea", "Mozambique", "Zimbabwe", "Ethiopia", "Nepal", "Gambia", "Niger")
+lowerMiddleIncome <- c("Armenia", "Kiribati", "Solomon Isds", "Bangladesh", "Kosovo", "Sri Lanka", "Bhutan", "Kyrgyzstan", "Sudan", "Bolivia", "Laos", "Swaziland", "Cabo Verde", "Lesotho", "Syria", "Cambodia", "Mauritania", "Tajikistan",  "Cameroon", "FS Micronesia", "Timor-Leste", "Congo",  "Rep. of Moldova", "Tonga", "Cote d'Ivoire", "Mongolia", "Tunisia",  "Djibouti", "Morocco", "Ukraine", "Egypt", "Myanmar", "Uzbekistan", "El Salvador", "Nicaragua", "Vanuatu", "Ghana", "Nigeria", "Vietnam", "Guatemala", "Pakistan", "State of Palestine", "Honduras", "Papua New Guinea", "Yemen", "India", "Philippines", "Zambia", "Indonesia", "Samoa", "Kenya", "Sao Tome and Principe")
+upperMiddleIncome <- c("Albania", "Ecuador", "Montenegro", "Algeria", "Fiji", "Namibia", "American Samoa", "Gabon", "Palau", "Angola", "Georgia", "Panama", "Argentina", "Grenada", "Paraguay", "Azerbaijan", "Guyana", "Peru", "Belarus", "Iran", "Romania", "Belize", "Iraq", "Russian Federation", "Bosnia Herzegovina", "Jamaica", "Serbia", "Botswana", "Jordan", "South Africa", "Brazil", "Kazakhstan", "Saint Lucia", "Bulgaria", "Lebanon", "Saint Vincent and the Grenadines", "China", "Libya", "Suriname", "Colombia", "Macedonia", "Thailand", "Costa Rica", "Malaysia", "Turkey", "Cuba", "Maldives", "Turkmenistan", "Dominica", "Marshall Islands", "Tuvalu", "Dominican Republic", "Mauritius", "Venezuela", "Equatorial Guinea", "Mexico")
+highIncome <- c("Andorra", "Gibraltar", "Oman", "Antigua and Barbuda", "Greece", "Poland", "Aruba", "Greenland", "Portugal", "Australia", "Guam", "Puerto Rico", "Austria", "Hong Kong", "Qatar", "Bahamas", "Hungary", "San Marino", "Bahrain", "Iceland", "Saudi Arabia", "Barbados", "Ireland", "Seychelles", "Belgium", "Isle of Man", "Singapore", "Bermuda", "Israel", "British Virgin Islands", "Italy", "Slovakia", "Brunei Darussalam", "Japan", "Slovenia", "Canada", "South Korea", "Spain", "Cayman Islands", "Kuwait", "St. Kitts and Nevis", "Latvia", "Chile", "Liechtenstein", "Sweden", "Croatia", "Lithuania", "Switzerland",  "Luxembourg", "Taiwan", "Cyprus", "Macao", "Trinidad and Tobago", "Czech Republic", "Malta", "Denmark", "Monaco", "United Arab Emirates", "Estonia", "Nauru", "United Kingdom", "Faroe Islands", "Netherlands", "USA", "Finland", "New Caledonia", "Uruguay", "France", "New Zealand", "United States Virgin Islands", "French Polynesia", "Northern Mariana Islands", "Germany", "Norway")
+
+# Just convert WB groups into a dataframe to create a map
+devMap <- data_frame(country = c(lowIncome, lowerMiddleIncome, upperMiddleIncome, highIncome)) %>% 
+    mutate(devGroup = case_when(
+        .$country %in% lowIncome ~ 0,
+        .$country %in% lowerMiddleIncome ~ 1,
+        .$country %in% upperMiddleIncome ~ 2,
+        .$country %in% highIncome ~ 3)) %>% 
+    # Need to change some countries to fit map data. Annoying. 
+    mutate(country = case_when(
+        grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina",
+        grepl("Congo, Dem.", .$country) ~ "Democratic Republic of the Congo",
+        grepl("Solomon", .$country) ~ "Solomon Islands",
+        grepl("Verde", .$country) ~ "Cape Verde",
+        grepl("Macao", .$country) ~ "Macau",
+        grepl("Palestine", .$country) ~ "Palestine",
+        grepl("Moldova", .$country) ~ "Republic of Moldova",
+        grepl("Russia", .$country) ~ "Russia",
+        grepl("Kitts", .$country) ~ "Saint Kitts and Nevis",
+        grepl("USA", .$country) ~ "United States",
+        grepl("Micronesia", .$country) ~ "Micronesia, Federated States of",
+        TRUE ~ .$country
+    )) %>% 
+    filter(!country %in% c("South Sudan", "Kosovo", "Sin"))
+
+devMap <- full_join(data_frame(country = world_spdf$NAME), devMap)
+world_spdf$devGroup <- devMap$devGroup
+pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), world_spdf$devGroup)
+```
+
+```{r, echo=F, message=F, warning=F, error=F, out.width="100%", out.height = "300px"}
+leaflet(world_spdf) %>% 
+    addTiles() %>% 
+    setView(lat = 17, lng = -12, zoom = 1) %>% 
+    addPolygons(stroke = TRUE, color = "#515151", weight = 1,
+                fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(devGroup)) %>% 
+    addLegend(position = "bottomleft",
+              colors = c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"),
+              values = world_spdf$devGroup,
+              labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income"))
+```
+
 
