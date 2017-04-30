@@ -15,113 +15,90 @@ strong {
 */
 
 .sidebar {
-  text-align: center;
-  padding: 2rem 1rem;
+  /*text-align: center;*/
+  position: fixed;
+  height: 100%;
+  padding: 4rem 2rem;
   color: white;
   background-color: #6a9fb5;
+  justify-content: flex-start;
 }
 
-/* 18rem sidebar, slightly smaller font, content has 1rem margin */
-@media (min-width: 48em) {
+.sidebar-nav {
+  position: absolute;
+  padding: 2rem 0.5rem;
+  max-width: 295px;
+  /*height: 100%;*/
+  /*vertical-align: bottom;*/
+  bottom: 0px;
+  list-style: none;
+}
+
+/* Trying something new: use default bootstrap columns/resizing; just need
+to manuall do top fixed sidebar for mobile/table */
+@media (max-width: 991px) {
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 18rem;
-    text-align: left;
-    font-size: 0.9rem;
+    justify-content: center;
+    position: relative;
+    height: auto;
+    min-height: 300px;
+    text-align: center;
+    padding: 0;
   }
 
-  .sidebar-sticky {
+  .sidebar-nav {
+    text-align: center;
+    padding: 0 auto;
+    max-width: 100%;
+    bottom: auto;
     position: absolute;
-    right:  1rem;
-    bottom: 1rem;
-    left:   1rem;
-    padding: 0px;
-    width: 16rem;
-  }
-
-  .content {
-    margin-left: 19rem;
-    margin-right: 1rem;
+    /*height: auto;*/
   }
 }
 
-/* 20rem sidebar, normal font size, 2 rem margin and max width of ?rem */
-@media (min-width: 64em) {
-
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 24rem;
-    text-align: left;
-    font-size: 1rem;
-  }
-
-  .sidebar-sticky {
-    position: absolute;
-    right:  1rem;
-    bottom: 1rem;
-    left:   1rem;
-    padding: 1rem;
-    width: 22rem;
-  }
-
-  .content {
-    margin-left: 28rem;
-    margin-right: 2rem;
-    max-width: 50rem;
-  }
+/* Side bar description*/
+.sidebar-nav p {
+  color: white;
+  font-size: 1.2rem;
+  /*margin: 0.4rem;*/
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+.sidebar-nav li {
+  list-style: none;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color:white;
+}
+.sidebar-nav ul {
+  padding-left: 0px;
 }
 
-/* Sidebar links */
-.sidebar a {
-  color: #fff;
+.sidebar-nav a {
+  color:white;
 }
-a.sidebar:hover,
-a.sidebar:focus {
-  text-decoration: underline;
+
+/* Remove underline from fontawesome icon links on hover */
+.iconLink {
+  margin-top: 2rem;
+}
+.iconLink a {
+  color: white;
+}
+.iconLink a:hover {
+  text-decoration: none;
 }
 
 /* Sidebar title */
-.sidebar-about h1 {
-  margin-top: 0;
-  font-family: "Noto Serif", serif;
+.sidebar h1 {
   font-size: 3rem;
   color: white;
 }
 
-/* Sidebar description */
-.sidebar-description {
-  font-size: 1.2rem;
-  font-weight: 300;
-}
-
-/* Sidebar links */
-.sidebar-nav {
-  padding-left: 0;
-  font-size: 1.2rem;
-  list-style: none;
-}
-.sidebar-nav-item {
-  display: block;
-}
-
-.sidebar-nav-item.active {
-  font-weight: bold;
-}
-
-/* Content:  */
-.content {
-  padding-top:    4rem;
-  padding-bottom: 4rem;
-}
-
 /* Add bottom margin after each post on homepage*/
 .post {
+  padding: 2rem;
   margin-bottom: 4rem;
 }
 
@@ -158,8 +135,6 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.25rem 0.75rem;
 }
 
-
-
 /* Tags */
 a#tags {
   /*background-color: white;*/
@@ -194,12 +169,6 @@ a:hover#tags {
   float: right;
 }
 
-
-/* Remove underline from fontawesome icon links on hover */
-a:hover.iconLink {
-  text-decoration: none;
-}
-
 /* Message class */
 .message {
   margin-bottom: 1rem;
@@ -223,7 +192,7 @@ caption {
 }
 
 /* But don't want captions for images */
-.figure p {
+.figure  {
   display:none;
 }
 

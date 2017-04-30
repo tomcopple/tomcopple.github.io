@@ -10,7 +10,6 @@ draft: true
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(fig.cap = FALSE)
 library(tidyverse);library(plotly);library(knitr);library(blogdown)
 library(leaflet);library(rgdal);library(htmltools)
 basedir <- "~/Dropbox/Work/coffeestats"
@@ -41,10 +40,9 @@ The table below shows the average value of exports of various commodities betwee
 htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relative fluid term, but the purposes of this article I\'m using the <em>Harmonized System</em> of tariff codes, grouped at the HS4 level. In terms of coffee, this means that decaffeinated and roasted coffee will be included in the aggregate value, but not instant coffee or ready-to-drink beverages. This is a pretty arbitrary distinction, but helps to maintain consistency for comparison. </p>')
 ```
 
-```{r, include=FALSE, cache = TRUE}
+```{r, include=FALSE}
 allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
-    filter(commodity != "Uranium") %>% 
-    mutate(commodity = gsub("Coffee", 'Coffee <i class="fa fa-coffee" aria-hidden="true"></i>', commodity))
+    filter(commodity != "Uranium")
 ```
 ```{r, message=F, warning=F, error=F, echo=F}
 allComsRaw %>%
