@@ -217,15 +217,17 @@ a:hover.iconLink {
   /*align:"middle";*/
 }
 
-/* Alternative way */
-/*.profileImage {
-  max-width:100%;
-  width:100%;
-  height:auto;
-  display:block;
-  padding-top:100%;
-  border-radius:50%;
-  background-size:100%;
+/* Want to keep table captions at the top */
+caption {
+  caption-side:top;
+}
 
-  background-image: url(/img/profile.jpg)
-}*/
+/* But don't want captions for images */
+.figure p {
+  display:none;
+}
+
+.figure {
+  margin-bottom: 1rem;
+  max-width: 100%;
+}

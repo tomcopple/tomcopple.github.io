@@ -1,70 +1,148 @@
 ---
-Categories:
-- ""
-Description: ""
-Tags:
-- ""
+Categories: 
+    - Blog
+Description: "Nope."
+Tags: 
+    - Coffee
 date: 2017-04-25T16:20:48+01:00
 title: "Is coffee the second most traded commodity in the world?"
 draft: true
 ---
 
-```{r setup, include = FALSE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.cap = FALSE)
 library(tidyverse);library(plotly);library(knitr);library(blogdown)
+library(leaflet);library(rgdal);library(htmltools)
 basedir <- "~/Dropbox/Work/coffeestats"
 ```
 
+
 ### [DRAFT - do not publish yet]
 
-Sample table of commodities by value:
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
-read_csv("~/Dropbox/Work/coffeestats/output/allCommodities.csv") %>% 
-    group_by(commodity, year) %>%
+One of the most widely known facts about coffee is that it's the second most traded commodity in the world, after oil. It's such common knowledge that Google even helpfully points it out. 
+
+![Google-being-helpful](/img/google-being-helpful.png)
+
+But where does this fact come from, and what does it even mean? Are we talking the total value of coffee in the world, or the volume, or the number of contracts? Oil is undoubtedly one of the most important commodities to the global economy, but is coffee really number 2?
+
+According to the International Coffee Organization (*disclaimer - I used to work there*), total exports of coffee in 2015/16 (the ICO used the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
+
+The total value of crude oil exports, on the other hand, was some US$765 billion in 2015, and US$1.4 trillion the year before, for a volume of around 1.8 billion tonnes. That's quite a large gap. 
+
+### Global context
+
+To compare the value of coffee to other commodities, I'm going to use the UN Comtrade International Trade Statistics Database, which seems to be the most comprehensive set of figures available, and also has a nice open API.
+
+The table below shows the average value of exports of various commodities between 2012 and 2015 (the last years for which full data are available). 
+
+*  NB Reduce down to < 20. 
+
+```{r, echo = FALSE}
+htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relative fluid term, but the purposes of this article I\'m using the <em>Harmonized System</em> of tariff codes, grouped at the HS4 level. In terms of coffee, this means that decaffeinated and roasted coffee will be included in the aggregate value, but not instant coffee or ready-to-drink beverages. This is a pretty arbitrary distinction, but helps to maintain consistency for comparison. </p>')
+```
+
+```{r, include=FALSE, cache = TRUE}
+allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
+    filter(commodity != "Uranium") %>% 
+    mutate(commodity = gsub("Coffee", 'Coffee <i class="fa fa-coffee" aria-hidden="true"></i>', commodity))
+```
+```{r, message=F, warning=F, error=F, echo=F}
+allComsRaw %>%
+    group_by(commodity, year) %>% 
     summarise(totValue = sum(value)) %>% 
     group_by(commodity) %>% 
     summarise(avValue = mean(totValue)/1000000) %>% 
     arrange(desc(avValue)) %>% 
-    kable(., row.names = TRUE, digits = 0, col.names = c("Commodity", "Average export value (US$ million)"), align = c("lc"), caption = "Average export value by commodity: 2012 - 2015", format.args = list(big.mark = ","))
-```
-
-Sample graph of coffee as a percentage of all exports:
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, out.width = "100%", out.height = "300px"}
-# Just read data locally for now
-avShare <- read_csv("~/Dropbox/Work/coffeestats/output/avShare.csv") %>% 
-    mutate(country = ordered(country, levels = rev(country)))
-plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
-        type = "bar", orientation = "h", text = ~paste0(round(100*avShare, 1), "%"), hoverinfo = 'text', marker = list(color = "#6a9fb5")
-) %>% 
-    layout(title = "Coffee as a % of total goods exports (US dollars)",
-           yaxis = list(title = "", showline = FALSE),
-           xaxis = list(title = "(%)", dtick = 10, zeroline = FALSE),
-           margin = list(l = 80),
-           font = list(family = "sans-serif", color = "#515151"))
+    knitr::kable(., row.names = TRUE,
+          digits = 0,
+          col.names = c("Commodity", "US$ million"),
+          align = c("lc"),
+          caption = "Average export value (2012 - 2015)",
+          format.args = list(big.mark = ","))
 
 ```
 
-Sample map:
+
+Looking at this table, coffee seems to be a long way from the top. The most valuable commodities are mostly energy or precious metals. Out of the agricultural commodities, soya beans are leading the way, presumably due to their use in livestock feed, driven by increasing demand for meat. Wheat and maize (corn) are also more valuable export crops worldwide than coffee. At first glance, it's difficult to find anything remarkable about the coffee trade. 
+
+### Coffee and international development
+
+One permutation of this factoid is that coffee is the second most traded commodity by developing countries (**Examples**). 
+
+There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is acrued in countries that don't even grow it - the largest export of roasted coffee, for example, is Germany. 
+
+The categorisation of countries into developed and developing has fallen out of fashion in recent years. In 2016, the World Bank removed the distinction from its World Development Indicators, saying
+
+> the term 'developing world'... is becoming less relevant, and with the focus of the SDGs [Sustainable Development Goals] on goals for the whole world, we should start phasing out the term 'developing world' in our data publications and databases. 
+
+For the purposes of this article, I'm going to use the World Bank lending groups, which categorise countries as low-income, lower-middle-income, upper-middle-income, and high-income, as shown below. 
+
 ```{r, include=F}
-library(leaflet);library(rgdal)
 # For some reason this works, doesn't otherwise. 
-world_spdf <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")), layer = "TM_WORLD_BORDERS_SIMPL-0.3")
+# Download the zip file from here; http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip 
+# And unzip into the working directory. 
+worldMap <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")),
+                    layer = "TM_WORLD_BORDERS_SIMPL-0.3")
 
 # Need to change some country names
-world_spdf$NAME <- gsub("Burma", "Myanmar", world_spdf$NAME)
-world_spdf$NAME <- gsub("Iran \\(Islamic Republic of\\)", "Iran", world_spdf$NAME)
-world_spdf$NAME <- gsub("Korea, Democratic People's Republic of", "North Korea", world_spdf$NAME)
-world_spdf$NAME <- gsub("Korea, Republic of", "South Korea", world_spdf$NAME)
-world_spdf$NAME <- gsub("Lao People's Democratic Republic", "Laos", world_spdf$NAME)
-world_spdf$NAME <- gsub("Libyan Arab Jamahiriya", "Libya", world_spdf$NAME)
-world_spdf$NAME <- gsub("The former Yugoslav Republic of Macedonia", "Macedonia", world_spdf$NAME)
-world_spdf$NAME <- gsub("United Republic of Tanzania", "Tanzania", world_spdf$NAME)
-world_spdf$NAME <- gsub("Syrian Arab Republic", "Syria", world_spdf$NAME)
-world_spdf$NAME <- gsub("Viet Nam", "Vietnam", world_spdf$NAME)
+worldMap$NAME <- case_when(
+    grepl("Burma", worldMap$NAME) ~ "Myanmar",
+    grepl("Iran", worldMap$NAME) ~ "Iran",
+    grepl("Korea, Democratic", worldMap$NAME) ~ "North Korea",
+    grepl("Korea, Republic", worldMap$NAME) ~ "South Korea",
+    grepl("Lao", worldMap$NAME) ~ "Laos",
+    grepl("Libyan", worldMap$NAME) ~ "Libya",
+    grepl("Macedonia", worldMap$NAME) ~ "Macedonia",
+    grepl("Tanzania", worldMap$NAME) ~ "Tanzania",
+    grepl("Syrian", worldMap$NAME) ~ "Syria",
+    grepl("Viet Nam", worldMap$NAME) ~ "Vietnam",
+    TRUE ~ as.character(worldMap$NAME)
+)
 
+# Create vectors of income class (copied from World Bank, https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups)
+# NB Had to make some manual adjustments to some country names, and remove Kosovo & South Sudan to do the merge later. 
+wbGroups <- bind_rows(
+    data_frame(country = c("Afghanistan", "Guinea", "Rwanda", "Benin", "Guinea-Bissau", "Senegal", "Burkina Faso", "Haiti", "Sierra Leone", "Burundi", "North Korea", "Somalia", "Central African Republic", "Liberia", "Chad", "Madagascar", "Tanzania", "Comoros", "Malawi", "Togo", "Democratic Republic of the Congo", "Mali", "Uganda", "Eritrea", "Mozambique", "Zimbabwe", "Ethiopia", "Nepal", "Gambia", "Niger")) %>% mutate(group = "Low-income", level = 1),
+    data_frame(country = c("Armenia", "Kiribati", "Solomon Islands", "Bangladesh", "Sri Lanka", "Bhutan", "Kyrgyzstan", "Sudan", "Bolivia", "Laos", "Swaziland", "Cape Verde", "Lesotho", "Syria", "Cambodia", "Mauritania", "Tajikistan",  "Cameroon", "Micronesia, Federated States of", "Timor-Leste", "Congo",  "Republic of Moldova", "Tonga", "Cote d'Ivoire", "Mongolia", "Tunisia",  "Djibouti", "Morocco", "Ukraine", "Egypt", "Myanmar", "Uzbekistan", "El Salvador", "Nicaragua", "Vanuatu", "Ghana", "Nigeria", "Vietnam", "Guatemala", "Pakistan", "Palestine", "Honduras", "Papua New Guinea", "Yemen", "India", "Philippines", "Zambia", "Indonesia", "Samoa", "Kenya", "Sao Tome and Principe")) %>% mutate(group = "Lower-middle-income", level = 2),
+    data_frame(country = c("Albania", "Ecuador", "Montenegro", "Algeria", "Fiji", "Namibia", "American Samoa", "Gabon", "Palau", "Angola", "Georgia", "Panama", "Argentina", "Grenada", "Paraguay", "Azerbaijan", "Guyana", "Peru", "Belarus", "Iran", "Romania", "Belize", "Iraq", "Russia", "Bosnia and Herzegovina", "Jamaica", "Serbia", "Botswana", "Jordan", "South Africa", "Brazil", "Kazakhstan", "Saint Lucia", "Bulgaria", "Lebanon", "Saint Vincent and the Grenadines", "China", "Libya", "Suriname", "Colombia", "Macedonia", "Thailand", "Costa Rica", "Malaysia", "Turkey", "Cuba", "Maldives", "Turkmenistan", "Dominica", "Marshall Islands", "Tuvalu", "Dominican Republic", "Mauritius", "Venezuela", "Equatorial Guinea", "Mexico")) %>% mutate(group = "Upper-middle-income", level = 3),
+    data_frame(country = c("Andorra", "Gibraltar", "Oman", "Antigua and Barbuda", "Greece", "Poland", "Aruba", "Greenland", "Portugal", "Australia", "Guam", "Puerto Rico", "Austria", "Hong Kong", "Qatar", "Bahamas", "Hungary", "San Marino", "Bahrain", "Iceland", "Saudi Arabia", "Barbados", "Ireland", "Seychelles", "Belgium", "Isle of Man", "Singapore", "Bermuda", "Israel", "British Virgin Islands", "Italy", "Slovakia", "Brunei Darussalam", "Japan", "Slovenia", "Canada", "South Korea", "Spain", "Cayman Islands", "Kuwait", "Saint Kitts and Nevis", "Latvia", "Chile", "Liechtenstein", "Sweden", "Croatia", "Lithuania", "Switzerland",  "Luxembourg", "Taiwan", "Cyprus", "Macau", "Trinidad and Tobago", "Czech Republic", "Malta", "Denmark", "Monaco", "United Arab Emirates", "Estonia", "Nauru", "United Kingdom", "Faroe Islands", "Netherlands", "United States", "Finland", "New Caledonia", "Uruguay", "France", "New Zealand", "United States Virgin Islands", "French Polynesia", "Northern Mariana Islands", "Germany", "Norway")) %>% mutate(group = "High-income", level = 4)
+)
+
+# Get full list of countries; needs to match order of world_spdf for the map. 
+devMap <- full_join(
+    data_frame(country = worldMap$NAME), 
+    wbGroups %>% filter(!(country %in% c(""))))
+
+worldMap$group <- devMap$group
+worldMap$level <- devMap$level
+worldMap$popup <- paste0(worldMap$NAME, ": ", worldMap$group)
+
+pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), worldMap$level)
+map <- leaflet(worldMap, width = "100%") %>% 
+    addTiles() %>% 
+    setView(lat = 17, lng = -12, zoom = 1) %>% 
+    addPolygons(stroke = TRUE, color = "#515151", weight = 1,
+                fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(level),
+                popup = htmltools::htmlEscape(worldMap$popup)) %>% 
+    addLegend(position = "bottomleft",
+              colors = c("#7882c0", "#ffe090", "#ffa590", "#6a9eb5"),
+              opacity = 0.7,
+              values = c(1, 2, 3, 4),
+              labels = c("Low-income", "Lower-middle-income", 
+                         "Upper-middle-income", "High-income"))
+```
+
+
+```{r, echo = F, out.height="350px", out.width = "100%"}
+map
+```
+
+
+Splitting up the data on export value by developing group does actually reveal some interesting insights. The graph below shows the export value for low-income, lower-middle-income and upper-middle-income groups (traditionally categorised as "developing countries"). 
+
+```{r, eval = FALSE, include = FALSE}
 
 # Need to do some tidying to allCommodities 
-allCommodities <- read_csv(file.path(basedir, "output", "allCommodities.csv"))
 allCommoditiesClean <- allCommodities %>%
     mutate(country = case_when(
         grepl("Bolivia", .$country) ~ "Bolivia",
@@ -83,54 +161,45 @@ allCommoditiesClean <- allCommodities %>%
         grepl("Other Asia", .$country) ~ "Taiwan",
         TRUE ~ .$country
     ))
-
-# Create vectors of income class (copied from World Bank, https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups)
-lowIncome <- c("Afghanistan", "Guinea", "Rwanda", "Benin", "Guinea-Bissau", "Senegal", "Burkina Faso", "Haiti", "Sierra Leone", "Burundi", "North Korea", "Somalia", "Central African Republic", "Liberia", "South Sudan", "Chad", "Madagascar", "Tanzania", "Comoros", "Malawi", "Togo", "Congo, Dem. Rep", "Mali", "Uganda", "Eritrea", "Mozambique", "Zimbabwe", "Ethiopia", "Nepal", "Gambia", "Niger")
-lowerMiddleIncome <- c("Armenia", "Kiribati", "Solomon Isds", "Bangladesh", "Kosovo", "Sri Lanka", "Bhutan", "Kyrgyzstan", "Sudan", "Bolivia", "Laos", "Swaziland", "Cabo Verde", "Lesotho", "Syria", "Cambodia", "Mauritania", "Tajikistan",  "Cameroon", "FS Micronesia", "Timor-Leste", "Congo",  "Rep. of Moldova", "Tonga", "Cote d'Ivoire", "Mongolia", "Tunisia",  "Djibouti", "Morocco", "Ukraine", "Egypt", "Myanmar", "Uzbekistan", "El Salvador", "Nicaragua", "Vanuatu", "Ghana", "Nigeria", "Vietnam", "Guatemala", "Pakistan", "State of Palestine", "Honduras", "Papua New Guinea", "Yemen", "India", "Philippines", "Zambia", "Indonesia", "Samoa", "Kenya", "Sao Tome and Principe")
-upperMiddleIncome <- c("Albania", "Ecuador", "Montenegro", "Algeria", "Fiji", "Namibia", "American Samoa", "Gabon", "Palau", "Angola", "Georgia", "Panama", "Argentina", "Grenada", "Paraguay", "Azerbaijan", "Guyana", "Peru", "Belarus", "Iran", "Romania", "Belize", "Iraq", "Russian Federation", "Bosnia Herzegovina", "Jamaica", "Serbia", "Botswana", "Jordan", "South Africa", "Brazil", "Kazakhstan", "Saint Lucia", "Bulgaria", "Lebanon", "Saint Vincent and the Grenadines", "China", "Libya", "Suriname", "Colombia", "Macedonia", "Thailand", "Costa Rica", "Malaysia", "Turkey", "Cuba", "Maldives", "Turkmenistan", "Dominica", "Marshall Islands", "Tuvalu", "Dominican Republic", "Mauritius", "Venezuela", "Equatorial Guinea", "Mexico")
-highIncome <- c("Andorra", "Gibraltar", "Oman", "Antigua and Barbuda", "Greece", "Poland", "Aruba", "Greenland", "Portugal", "Australia", "Guam", "Puerto Rico", "Austria", "Hong Kong", "Qatar", "Bahamas", "Hungary", "San Marino", "Bahrain", "Iceland", "Saudi Arabia", "Barbados", "Ireland", "Seychelles", "Belgium", "Isle of Man", "Singapore", "Bermuda", "Israel", "British Virgin Islands", "Italy", "Slovakia", "Brunei Darussalam", "Japan", "Slovenia", "Canada", "South Korea", "Spain", "Cayman Islands", "Kuwait", "St. Kitts and Nevis", "Latvia", "Chile", "Liechtenstein", "Sweden", "Croatia", "Lithuania", "Switzerland",  "Luxembourg", "Taiwan", "Cyprus", "Macao", "Trinidad and Tobago", "Czech Republic", "Malta", "Denmark", "Monaco", "United Arab Emirates", "Estonia", "Nauru", "United Kingdom", "Faroe Islands", "Netherlands", "USA", "Finland", "New Caledonia", "Uruguay", "France", "New Zealand", "United States Virgin Islands", "French Polynesia", "Northern Mariana Islands", "Germany", "Norway")
-
-# Just convert WB groups into a dataframe to create a map
-devMap <- data_frame(country = c(lowIncome, lowerMiddleIncome, upperMiddleIncome, highIncome)) %>% 
+allCommoditiesDev <- allCommoditiesClean %>% 
     mutate(devGroup = case_when(
-        .$country %in% lowIncome ~ 0,
-        .$country %in% lowerMiddleIncome ~ 1,
-        .$country %in% upperMiddleIncome ~ 2,
-        .$country %in% highIncome ~ 3)) %>% 
-    # Need to change some countries to fit map data. Annoying. 
-    mutate(country = case_when(
-        grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina",
-        grepl("Congo, Dem.", .$country) ~ "Democratic Republic of the Congo",
-        grepl("Solomon", .$country) ~ "Solomon Islands",
-        grepl("Verde", .$country) ~ "Cape Verde",
-        grepl("Macao", .$country) ~ "Macau",
-        grepl("Palestine", .$country) ~ "Palestine",
-        grepl("Moldova", .$country) ~ "Republic of Moldova",
-        grepl("Russia", .$country) ~ "Russia",
-        grepl("Kitts", .$country) ~ "Saint Kitts and Nevis",
-        grepl("USA", .$country) ~ "United States",
-        grepl("Micronesia", .$country) ~ "Micronesia, Federated States of",
-        TRUE ~ .$country
+        .$country %in% lowIncome ~ "low-income",
+        .$country %in% lowerMiddleIncome ~ "lower-middle-income",
+        .$country %in% upperMiddleIncome ~ "upper-middle-income",
+        .$country %in% highIncome ~ "high-income",
+        TRUE ~ "other"
     )) %>% 
-    filter(!country %in% c("South Sudan", "Kosovo", "Sin"))
-
-devMap <- full_join(data_frame(country = world_spdf$NAME), devMap)
-world_spdf$devGroup <- devMap$devGroup
-pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), world_spdf$devGroup)
-popupText <- paste0(world_spdf$NAME, ": ", factor(world_spdf$devGroup, labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income")))
+    filter(devGroup != "other") %>% 
+    group_by(commodity, devGroup) %>% 
+    summarise(total = sum(value))
 ```
 
-```{r, echo=F, message=F, warning=F, error=F, out.width="100%", out.height = "300px"}
-leaflet(world_spdf) %>% 
-    addTiles() %>% 
-    setView(lat = 17, lng = -12, zoom = 1) %>% 
-    addPolygons(stroke = TRUE, color = "#515151", weight = 1,
-                fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(devGroup),
-                popup = htmltools::htmlEscape(popupText)) %>% 
-    addLegend(position = "bottomleft",
-              colors = c("#7882c0", "#ffe090", "#ffa590", "#6a9eb5"),
-              values = world_spdf$devGroup,
-              labels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income")) 
+```{r, echo = F, out.width = "100%", out.height = "380px"}
+# g1 <- plot_ly(filter(allCommoditiesDev, devGroup == "low-income"), x = ~
 ```
 
+
+Sample graph of coffee as a percentage of all exports (Maybe just low-income?):
+
+```{r, include = FALSE, eval = FALSE}
+# Just read data locally for now
+avShare <- read_csv("~/Dropbox/Work/coffeestats/output/avShare.csv") %>% 
+    mutate(country = ordered(country, levels = rev(country)))
+```
+```{r, echo = F, out.width = "100%", out.height = "380px", eval = FALSE}
+plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
+        type = "bar", orientation = "h", text = ~paste0(round(100*avShare, 1), "%"), hoverinfo = 'text', marker = list(color = "#6a9fb5")
+) %>% 
+    layout(title = "Coffee as a % of total goods exports (US dollars)",
+           yaxis = list(title = "", showline = FALSE),
+           xaxis = list(title = "(%)", dtick = 10, zeroline = FALSE),
+           margin = list(l = 80),
+           font = list(family = "sans-serif", color = "#515151"))
+
+```
+
+
+```{r, echo = FALSE}
+htmltools::HTML("<p class = 'message'>The entire source code for this article is available <a href = 'https://github.com/tomcopple/tomcopple.github.io/blob/hugo/content/post/2017-04-25-iscoffeesecond.Rmd' target = '_blank'>here</a>.</p>")
+```
 
