@@ -24,7 +24,7 @@ One of the most widely known facts about coffee is that it's the second most tra
 
 But where does this fact come from, and what does it even mean? Are we talking the total value of coffee in the world, or the volume, or the number of contracts? Oil is undoubtedly one of the most important commodities to the global economy, but is coffee really number 2?
 
-According to the International Coffee Organization (*disclaimer - I used to work there*), total exports of coffee in 2015/16 (the ICO used the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
+According to the International Coffee Organization (*disclaimer - I used to work there*), total exports of coffee in 2015/16 (the ICO uses the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
 
 The total value of crude oil exports, on the other hand, was some US$765 billion in 2015, and US$1.4 trillion the year before, for a volume of around 1.8 billion tonnes. That's quite a large gap. 
 
@@ -34,15 +34,13 @@ To compare the value of coffee to other commodities, I'm going to use the UN Com
 
 The table below shows the average value of exports of various commodities between 2012 and 2015 (the last years for which full data are available). 
 
-*  NB Reduce down to < 20. 
-
 ```{r, echo = FALSE}
 htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relative fluid term, but the purposes of this article I\'m using the <em>Harmonized System</em> of tariff codes, grouped at the HS4 level. In terms of coffee, this means that decaffeinated and roasted coffee will be included in the aggregate value, but not instant coffee or ready-to-drink beverages. This is a pretty arbitrary distinction, but helps to maintain consistency for comparison. </p>')
 ```
 
 ```{r, include=FALSE}
 allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
-    filter(commodity != "Uranium")
+    filter(!(commodity %in% c("Soya-bean oil", "Barley", "Olive oil", "Uranium")))
 ```
 ```{r, message=F, warning=F, error=F, echo=F}
 allComsRaw %>%
@@ -67,7 +65,7 @@ Looking at this table, coffee seems to be a long way from the top. The most valu
 
 One permutation of this factoid is that coffee is the second most traded commodity by developing countries (**Examples**). 
 
-There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is acrued in countries that don't even grow it - the largest export of roasted coffee, for example, is Germany. 
+There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is accrued in countries that don't even grow it - the largest exporter of roasted coffee worldwide, for example, is Germany. 
 
 The categorisation of countries into developed and developing has fallen out of fashion in recent years. In 2016, the World Bank removed the distinction from its World Development Indicators, saying
 
@@ -109,7 +107,7 @@ wbGroups <- bind_rows(
 # Get full list of countries; needs to match order of world_spdf for the map. 
 devMap <- full_join(
     data_frame(country = worldMap$NAME), 
-    wbGroups %>% filter(!(country %in% c(""))))
+    wbGroups)
 
 worldMap$group <- devMap$group
 worldMap$level <- devMap$level
@@ -138,64 +136,172 @@ map
 
 Splitting up the data on export value by developing group does actually reveal some interesting insights. The graph below shows the export value for low-income, lower-middle-income and upper-middle-income groups (traditionally categorised as "developing countries"). 
 
-```{r, eval = FALSE, include = FALSE}
-
-# Need to do some tidying to allCommodities 
-allCommoditiesClean <- allCommodities %>%
+```{r, include = FALSE}
+# Need to do some tidying to allComsRaw country names, then merge with World Bank income groups
+allComsClean <- allComsRaw %>% 
     mutate(country = case_when(
-        grepl("Bolivia", .$country) ~ "Bolivia",
-        grepl("Czechia", .$country) ~ "Czech Republic", 
-        grepl("Hong Kong", .$country) ~ "Hong Kong", 
-        grepl("Macao", .$country) ~ "Macao",
-        grepl("Macedonia", .$country) ~ "Macedonia", 
-        grepl("Rep. of Korea", .$country) ~ "South Korea", 
+        grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina",
+        grepl("Czechia", .$country) ~ "Czech Republic",
+        grepl("Hong Kong", .$country) ~ "Hong Kong",
+        grepl("Rep. of Korea", .$country) ~ "South Korea",
+        grepl("Russian Federation", .$country) ~ "Russia",
         grepl("Viet Nam", .$country) ~ "Vietnam",
+        grepl("Macedonia", .$country) ~ "Macedonia",
+        grepl("USA", .$country) ~ "United States",
         grepl("Dominican Rep.", .$country) ~ "Dominican Republic",
+        grepl("Other Asia, nes", .$country) ~ "Taiwan",
         grepl("Tanzania", .$country) ~ "Tanzania",
         grepl("Ivoire", .$country) ~ "Cote d'Ivoire",
+        grepl("Moldova", .$country) ~ "Republic of Moldova",
         grepl("Central African", .$country) ~ "Central African Republic",
-        grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina", 
-        
-        grepl("Other Asia", .$country) ~ "Taiwan",
+        grepl("Bolivia", .$country) ~ "Bolivia",
+        grepl("Verde", .$country) ~ "Cape Verde",
+        grepl("Palestine", .$country) ~ "Palestine",
+        grepl("Micronesia", .$country) ~ "Micronesia, Federated States of",
+        grepl("Solomon", .$country) ~ "Solomon Islands",
+        grepl("Macao", .$country) ~ "Macau",
+        TRUE ~ .$country),
+        commodity = ifelse(grepl("oil", commodity), "Oil", commodity)
+    ) %>% 
+    # Merge with wbGroups to get income group
+    full_join(., wbGroups) %>% 
+    # Remove NAs, should just be Montserrat and Caicos Islands
+    na.omit()
+
+# Now get average annual value for each commodity and income group. 
+allComsDev <- allComsClean%>% 
+    # Get yearly totals for commodity by group
+    group_by(year, commodity, group) %>% 
+    summarise(totValue = sum(value)) %>% 
+    # And get average for the period as before
+    group_by(commodity, group) %>% 
+    summarise(avValue = mean(totValue)) %>% 
+    ungroup() %>% 
+    filter(commodity %in% c("Coal", "Coffee", "Copper", "Gold", "Maize", "Natural gas", "Palm oil", "Oil", "Soya beans", "Sugar", "Timber", "Wheat")) %>% 
+    mutate(commodity = ordered(commodity, levels = rev(commodity)))
+
+# Now plot three graphs for the bottom three groups
+p1 <- allComsDev %>% 
+    filter(group == "Low-income") %>% 
+    # arrange(desc(avValue)) %>% 
+    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
+    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
+            type = "bar", orientation = "h", 
+            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
+            hoverinfo = "text",
+            marker = list(color = "#ffa590")) %>% 
+    layout(title = "Commodity exports by income group",
+           annotations = list(x = 0, y = 11, text = "Low-income", showarrow = FALSE,
+                              align = "left", xref = "paper"),
+           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           margin = list(l = 0),
+           showlegend = FALSE, 
+           font = list(family = "sans-serif", color = "#515151"))
+p2 <- allComsDev %>% 
+    filter(group == "Lower-middle-income") %>% 
+    # arrange(desc(avValue)) %>% 
+    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
+    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
+            type = "bar", orientation = "h", 
+            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
+            hoverinfo = "text",
+            marker = list(color = "#ffe090")) %>% 
+    layout(annotations = list(x = 0, y = 11, text = "Lower-middle-income", showarrow = FALSE,  xref = "paper", xanchor = "left"),
+           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           xaxis = list(title = "US$ Billion", showline = FALSE, zeroline = FALSE),
+           margin = list(l = 0),
+           showlegend = FALSE,
+           font = list(family = "sans-serif", color = "#515151"))
+p3 <- allComsDev %>% 
+    filter(group == "Upper-middle-income") %>% 
+    # arrange(desc(avValue)) %>% 
+    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
+    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
+            type = "bar", orientation = "h", 
+            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
+            hoverinfo = "text",
+            marker = list(color = "#7882c0")) %>% 
+    layout(annotations = list(x = 0, y = 11, text = "Upper-middle-income", showarrow = FALSE, xanchor = "left", xref = "paper"),
+           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           margin = list(l = 0),
+           showlegend = FALSE,
+           font = list(family = "sans-serif", color = "#515151"))
+```
+
+```{r, echo = FALSE, out.width = "100%", out.height = "380px"}
+plotly::subplot(p1, p2, p3,
+                nrows = 1, 
+                shareY = TRUE, shareX = FALSE,
+                titleX = TRUE, titleY = TRUE,
+                which_layout = 1) %>% 
+    layout(margin = list(l = 70))
+```
+
+*  Coffee much more important for the low-income countries
+*  This is mostly skewed by the relative importance of Ethiopia.
+*  Gold is weirdly high too (?)
+*  Anything else?
+
+For the low-income countries, coffee is relatively more important as an export crop. In fact, for those low-income countries that produce coffee, it accounts for a significant amount of their total export earnings. This is important, because commodity exports are an essential source of foreign exchange for many developing countries, yet international coffee prices are inherently volatile and unpredictable. 
+
+Looking at those low-income, coffee-producing countries in a little more detail, we can see how much coffee drives their export earnings. The graph below shows the value of coffee exports as a percentage of total merchandise exports (according to World Bank data). 
+
+```{r, include = FALSE}
+# Just get low-income coffee-producing countries, and average value for coffee
+lowIncomeCoffee <- allComsClean %>% 
+    filter(commodity == "Coffee", 
+           group == "Low-income",
+           value > 0) %>% 
+    group_by(country, countryCode) %>% 
+    summarise(coffeeValue = mean(value)) %>% ungroup()
+
+# Download merchandise data from the World Bank for these countries
+library(wbstats)
+wbExports <- wb(country = unique(lowIncomeCoffee$countryCode),
+                indicator = "BX.GSR.MRCH.CD",
+                startdate = 2012, enddate = 2015) %>% 
+    select(country, year = date, value) %>% 
+    # Think these are the only changes I need. 
+    mutate(country = case_when(
+        grepl("Gambia", .$country) ~ "Gambia",
+        grepl("Yemen", .$country) ~ "Yemen",
         TRUE ~ .$country
-    ))
-allCommoditiesDev <- allCommoditiesClean %>% 
-    mutate(devGroup = case_when(
-        .$country %in% lowIncome ~ "low-income",
-        .$country %in% lowerMiddleIncome ~ "lower-middle-income",
-        .$country %in% upperMiddleIncome ~ "upper-middle-income",
-        .$country %in% highIncome ~ "high-income",
-        TRUE ~ "other"
     )) %>% 
-    filter(devGroup != "other") %>% 
-    group_by(commodity, devGroup) %>% 
-    summarise(total = sum(value))
-```
+    # And get average value again (to smooth out yearly fluctuations)
+    group_by(country) %>% summarise(exportValue = mean(value)) %>% ungroup() %>% 
+    as_data_frame()
 
-```{r, echo = F, out.width = "100%", out.height = "380px"}
-# g1 <- plot_ly(filter(allCommoditiesDev, devGroup == "low-income"), x = ~
-```
-
-
-Sample graph of coffee as a percentage of all exports (Maybe just low-income?):
-
-```{r, include = FALSE, eval = FALSE}
-# Just read data locally for now
-avShare <- read_csv("~/Dropbox/Work/coffeestats/output/avShare.csv") %>% 
+# Now merge, and get coffee as a % of total merchandise exports. 
+wbCoffee <- inner_join(
+    x = lowIncomeCoffee, y = wbExports
+) %>% 
+    select(country, coffeeValue, exportValue) %>% 
+    mutate(coffeeShare = coffeeValue/exportValue) %>% 
+    arrange(desc(coffeeShare)) %>% 
+    top_n(10) %>% 
+    # Need to reverse order to get them large-small in bar chart
     mutate(country = ordered(country, levels = rev(country)))
 ```
-```{r, echo = F, out.width = "100%", out.height = "380px", eval = FALSE}
-plot_ly(data = avShare, x = ~avShare * 100, y = ~country,
-        type = "bar", orientation = "h", text = ~paste0(round(100*avShare, 1), "%"), hoverinfo = 'text', marker = list(color = "#6a9fb5")
-) %>% 
-    layout(title = "Coffee as a % of total goods exports (US dollars)",
+```{r, echo = FALSE, out.width = "100%", out.height = "308px"}
+plot_ly(data = wbCoffee, x = ~coffeeShare * 100, y = ~country,
+        type = "bar", orientation = "h", 
+        text = ~paste0(round(100*coffeeShare, 1), "%"),
+        hoverinfo = "text", 
+        marker = list(color = "#619fb5")) %>% 
+    layout(title = "Coffee as a % of total merchandise exports",
            yaxis = list(title = "", showline = FALSE),
            xaxis = list(title = "(%)", dtick = 10, zeroline = FALSE),
            margin = list(l = 80),
            font = list(family = "sans-serif", color = "#515151"))
-
 ```
 
+### Conclusions
+
+Assessing the relative value of traded commodities worldwide is enormously complicated - each goes through its own various stages of processing and transactions to render any blanket comparison largely meaningless. That said, the coffee is evidently **not** the second most traded commodity worldwide after oil. 
+
+That said, coffee **is** a hugely important export crop for many developing countries, in the case of Burundi accounting for nearly 40% of total merchandise exports. For these countries, coffee isn't just the second most important commodity, it's much more important than that. 
 
 ```{r, echo = FALSE}
 htmltools::HTML("<p class = 'message'>The entire source code for this article is available <a href = 'https://github.com/tomcopple/tomcopple.github.io/blob/hugo/content/post/2017-04-25-iscoffeesecond.Rmd' target = '_blank'>here</a>.</p>")

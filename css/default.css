@@ -8,6 +8,7 @@ html, body {
 
 strong {
   font-weight: 700;
+  color: #000000;
 }
 
 /*
@@ -157,6 +158,15 @@ a:hover#tags {
   background-color: #f9f9f9;
 }
 
+/* Just need to add a margin to bottom of leaflet maps.
+   Might need to do this for other htmlwidgets as well.
+   Yep, also adding for plotly.
+   */
+
+.html-widget {
+  margin-bottom: 1rem;
+}
+
 /* Profile picture thumbnail */
 .img-thumbnail {
   /*width: 80%;*/
@@ -172,7 +182,7 @@ caption {
 }
 
 /* But don't want captions for images */
-.figure  {
+.figure .caption {
   display:none;
 }
 
@@ -181,8 +191,7 @@ caption {
   max-width: 100%;
 }
 
-/* Trying something new: use default bootstrap columns/resizing; just need
-to manuall do top fixed sidebar for mobile/table */
+/* Manually fix sidebar to top for phone/tablet */
 @media (max-width: 991px) {
   .sidebar {
     justify-content: center;
