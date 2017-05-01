@@ -34,27 +34,7 @@ strong {
   list-style: none;
 }
 
-/* Trying something new: use default bootstrap columns/resizing; just need
-to manuall do top fixed sidebar for mobile/table */
-@media (max-width: 991px) {
-  .sidebar {
-    justify-content: center;
-    position: relative;
-    height: auto;
-    min-height: 300px;
-    text-align: center;
-    padding: 0;
-  }
 
-  .sidebar-nav {
-    text-align: center;
-    padding: 0 auto;
-    max-width: 100%;
-    bottom: auto;
-    position: absolute;
-    /*height: auto;*/
-  }
-}
 
 /* Side bar description*/
 .sidebar-nav p {
@@ -199,4 +179,44 @@ caption {
 .figure {
   margin-bottom: 1rem;
   max-width: 100%;
+}
+
+/* Trying something new: use default bootstrap columns/resizing; just need
+to manuall do top fixed sidebar for mobile/table */
+@media (max-width: 991px) {
+  .sidebar {
+    justify-content: center;
+    position: relative;
+    height: auto;
+    min-height: 330px;
+    text-align: center;
+    padding: 0;
+  }
+
+  .sidebar-nav {
+    text-align: center;
+    padding: 1rem;
+    max-width: 100%;
+    bottom: auto;
+    position: absolute;
+  }
+
+  .iconLink {
+    margin-top: 1rem;
+  }
+
+  .sidebar-nav p {
+    margin-bottom: 1rem;
+  }
+
+  .post {
+    padding: 1rem;
+  }
+}
+
+/* Also just want to reduce padding around posts for phone view */
+@media (max-width: 767px) {
+  .post {
+    padding: 1rem 0.5rem;
+  }
 }
