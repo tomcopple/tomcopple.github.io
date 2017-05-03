@@ -3,7 +3,6 @@ Categories:
 - "Projects"
 Description: "A work in progress: Some summary data on coffee"
 Tags:
-- "coffee"
 date: 2017-04-24T11:34:32+01:00
 title: "Coffee"
 ---

@@ -19,6 +19,7 @@ strong {
   /*text-align: center;*/
   position: fixed;
   height: 100%;
+  /*min-width: 275px;*/
   padding: 4rem 2rem;
   color: white;
   background-color: #6a9fb5;

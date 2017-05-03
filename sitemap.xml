@@ -2,27 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://tomcopple.github.io/</loc>
+    <loc>/</loc>
+    <lastmod>2017-04-25T16:20:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2017/04/25/is-coffee-the-second-most-traded-commodity-in-the-world/</loc>
+    <lastmod>2017-04-25T16:20:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/coffee/</loc>
     <lastmod>2017-04-24T11:34:32+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomcopple.github.io/project/coffee/</loc>
-    <lastmod>2017-04-24T11:34:32+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://tomcopple.github.io/2017/04/20/test-page/</loc>
+    <loc>/2017/04/20/test-page/</loc>
     <lastmod>2017-04-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomcopple.github.io/project/trakt/</loc>
+    <loc>/project/lastfm/</loc>
+    <lastmod>2017-02-07T16:30:08+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/trakt/</loc>
     <lastmod>2017-02-05T16:14:49+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tomcopple.github.io/about/</loc>
+    <loc>/2017/01/26/tennis/</loc>
+    <lastmod>2017-01-26T16:19:23+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2017/01/20/some-music-ive-been-listening-to/</loc>
+    <lastmod>2017-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
     <lastmod>2017-01-01T00:00:00+00:00</lastmod>
   </url>
   

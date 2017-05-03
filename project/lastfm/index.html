@@ -1,4 +1,4 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head>
   <link href="http://gmpg.org/xfn/11" rel="profile">
@@ -15,14 +15,11 @@
   
   
   <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-  
-  
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   
   <link rel = 'stylesheet' href = "/css/default.css">
   <link rel = "stylesheet" href = "/css/font-awesome.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif">
-
 
   
   <script>
@@ -41,9 +38,15 @@
   
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../apple-touch-icon-144-precomposed.png">
   <link rel="shortcut icon" href="../../favicon.png">
-
+ 
   
-  <link href="" rel="alternate" type="application/rss+xml" title="Test Site" />
+  
+    <meta name = "twitter:card" content = "summary" />
+    <meta name = "twitter:site" content = "@tomcopple" />
+    <meta name = "twitter:title" content = "Lastfm" />
+    <meta name = "twitter:description" content = "An interactive display of lastfm listening habits." />
+    <meta name = "twitter:image" content = "/img/thumbnails/some-music.png" />
+  
 
   
   
@@ -61,10 +64,13 @@ ga('send', 'pageview');
 
 
 
+
 </head>
 
-	<body class="theme-base-0d ">
-		<div class="col-lg-4 sidebar">
+<body class="theme-base-0d ">
+	<div class = "container-fluid">
+		<div class = "row">
+			<div class="col-lg-3 sidebar">
   <div class = "col sidebar-nav">
       
       
@@ -86,35 +92,39 @@ ga('send', 'pageview');
           </li>
       </ul>
 
-    <p>&copy; 2017. All rights reserved. </p>
+    <p>&copy; 2017.</p>
   </div>
 </div>
 
 
-		<div class="content container-fluid">
-			<div class="post">
-			 	<h1>Lastfm</h1>
-			  
+			<div class="col-lg-8 offset-lg-3">
+				<div class="post">
+			 		<h1>Lastfm</h1>
+			  	<div class="post-date">Tue, Feb 7, 2017</div>
 
 
 <p>This is a test page for a potential project.</p>
 
 
 
-Testin testing testing
-			<div>
+
+					<div>
+						
+							<a id="tags" href="../../tags/music">Music</a>
+						
+							<a id="tags" href="../../tags/plotly">Plotly</a>
+						
+							<a id="tags" href="../../tags/shiny">Shiny</a>
+						
+							<a id="tags" href="../../tags/r">R</a>
+						
+					</div>
+				</div>
+
 				
-					<a id="tags" href="../../tags/music">Music</a>
-				
-					<a id="tags" href="../../tags/plotly">Plotly</a>
-				
-					<a id="tags" href="../../tags/shiny">Shiny</a>
-				
-					<a id="tags" href="../../tags/r">R</a>
-				
-			</div>
+
 			</div>
 		</div>
-
-  </body>
+	</div>
+</body>
 </html>

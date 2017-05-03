@@ -6,6 +6,7 @@ Tags:
     - Coffee
 date: 2017-04-25T16:20:48+01:00
 title: "Is coffee the second most traded commodity in the world?"
+thumbnail: "isCoffeeSecond.png"
 draft: true
 ---
 
@@ -14,7 +15,6 @@ library(tidyverse);library(plotly);library(knitr);library(blogdown)
 library(leaflet);library(rgdal);library(htmltools)
 basedir <- "~/Dropbox/Work/coffeestats"
 ```
-
 
 ### [DRAFT - do not publish yet]
 
@@ -32,7 +32,7 @@ The total value of crude oil exports, on the other hand, was some US$765 billion
 
 To compare the value of coffee to other commodities, I'm going to use the UN Comtrade International Trade Statistics Database, which seems to be the most comprehensive set of figures available, and also has a nice open API.
 
-The table below shows the average value of exports of various commodities between 2012 and 2015 (the last years for which full data are available). 
+The graph below shows the average value of global exports for various commodities between 2012 and 2015 (the last years for which full data are available). 
 
 ```{r, echo = FALSE}
 htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relative fluid term, but the purposes of this article I\'m using the <em>Harmonized System</em> of tariff codes, grouped at the HS4 level. In terms of coffee, this means that decaffeinated and roasted coffee will be included in the aggregate value, but not instant coffee or ready-to-drink beverages. This is a pretty arbitrary distinction, but helps to maintain consistency for comparison. </p>')
@@ -40,14 +40,16 @@ htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relativ
 
 ```{r, include=FALSE}
 allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
-    filter(!(commodity %in% c("Soya-bean oil", "Barley", "Olive oil", "Uranium")))
-```
-```{r, message=F, warning=F, error=F, echo=F}
-allComsRaw %>%
+    filter(!(commodity %in% c("Petroleum oil, non-crude", "Soya-bean oil", "Barley", "Olive oil", "Uranium"))) %>% 
+    mutate(commodity = ifelse(grepl("Petroleum", commodity), "Crude oil", commodity))
+allComsGroup <- allComsRaw %>% 
     group_by(commodity, year) %>% 
     summarise(totValue = sum(value)) %>% 
     group_by(commodity) %>% 
-    summarise(avValue = mean(totValue)/1000000) %>% 
+    summarise(avValue = mean(totValue)/1000000)
+```
+```{r, include = F}
+allComsGroup %>% 
     arrange(desc(avValue)) %>% 
     knitr::kable(., row.names = TRUE,
           digits = 0,
@@ -57,13 +59,25 @@ allComsRaw %>%
           format.args = list(big.mark = ","))
 
 ```
+```{r, echo = F, out.width = "100%", out.height = "380px"}
+plot_ly(allComsGroup %>% 
+            arrange(desc(avValue)) %>% 
+            mutate(commodity = ordered(commodity, levels = commodity)), 
+        x = ~commodity, y = ~avValue/1000, type = "bar", 
+        # orientation = "h", 
+        text = ~paste0(commodity, ": US$", round(avValue/1000, 1), " bln"), hoverinfo = "text", marker = list(color = "#619fb5")) %>% 
+    layout(title = "Average global export value (2012 - 2015)", 
+           xaxis = list(title = "", showline = FALSE, tickangle = 325),
+           yaxis = list(title = "Billion US$", zeroline = FALSE, separatethousands = TRUE),
+           margin = list(b = 80),
+           font = list(family = "sans-serif", color = "#515151"))
+```
 
-
-Looking at this table, coffee seems to be a long way from the top. The most valuable commodities are mostly energy or precious metals. Out of the agricultural commodities, soya beans are leading the way, presumably due to their use in livestock feed, driven by increasing demand for meat. Wheat and maize (corn) are also more valuable export crops worldwide than coffee. At first glance, it's difficult to find anything remarkable about the coffee trade. 
+Looking at this graph, coffee seems to be a long way from the top. The most valuable commodities are mostly energy or precious metals. Out of the agricultural commodities, soya beans are leading the way, presumably due to their use in livestock feed, driven by increasing demand for meat. Wheat and maize (corn) are also more valuable export crops worldwide than coffee. At first glance, it's difficult to find anything remarkable about the coffee trade. 
 
 ### Coffee and international development
 
-One permutation of this factoid is that coffee is the second most traded commodity by developing countries (**Examples**). 
+One permutation of this factoid is that coffee is the second most traded commodity by developing countries. 
 
 There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is accrued in countries that don't even grow it - the largest exporter of roasted coffee worldwide, for example, is Germany. 
 
@@ -74,9 +88,7 @@ The categorisation of countries into developed and developing has fallen out of 
 For the purposes of this article, I'm going to use the World Bank lending groups, which categorise countries as low-income, lower-middle-income, upper-middle-income, and high-income, as shown below. 
 
 ```{r, include=F}
-# For some reason this works, doesn't otherwise. 
-# Download the zip file from here; http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip 
-# And unzip into the working directory. 
+# Download the zip file from here; http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip and unzip into the working directory. 
 worldMap <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")),
                     layer = "TM_WORLD_BORDERS_SIMPL-0.3")
 
@@ -96,7 +108,7 @@ worldMap$NAME <- case_when(
 )
 
 # Create vectors of income class (copied from World Bank, https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups)
-# NB Had to make some manual adjustments to some country names, and remove Kosovo & South Sudan to do the merge later. 
+# NB Had to make some manual adjustments to some country names, and remove Kosovo & South Sudan to do the merge later as they don't appear on the map. 
 wbGroups <- bind_rows(
     data_frame(country = c("Afghanistan", "Guinea", "Rwanda", "Benin", "Guinea-Bissau", "Senegal", "Burkina Faso", "Haiti", "Sierra Leone", "Burundi", "North Korea", "Somalia", "Central African Republic", "Liberia", "Chad", "Madagascar", "Tanzania", "Comoros", "Malawi", "Togo", "Democratic Republic of the Congo", "Mali", "Uganda", "Eritrea", "Mozambique", "Zimbabwe", "Ethiopia", "Nepal", "Gambia", "Niger")) %>% mutate(group = "Low-income", level = 1),
     data_frame(country = c("Armenia", "Kiribati", "Solomon Islands", "Bangladesh", "Sri Lanka", "Bhutan", "Kyrgyzstan", "Sudan", "Bolivia", "Laos", "Swaziland", "Cape Verde", "Lesotho", "Syria", "Cambodia", "Mauritania", "Tajikistan",  "Cameroon", "Micronesia, Federated States of", "Timor-Leste", "Congo",  "Republic of Moldova", "Tonga", "Cote d'Ivoire", "Mongolia", "Tunisia",  "Djibouti", "Morocco", "Ukraine", "Egypt", "Myanmar", "Uzbekistan", "El Salvador", "Nicaragua", "Vanuatu", "Ghana", "Nigeria", "Vietnam", "Guatemala", "Pakistan", "Palestine", "Honduras", "Papua New Guinea", "Yemen", "India", "Philippines", "Zambia", "Indonesia", "Samoa", "Kenya", "Sao Tome and Principe")) %>% mutate(group = "Lower-middle-income", level = 2),
@@ -109,16 +121,20 @@ devMap <- full_join(
     data_frame(country = worldMap$NAME), 
     wbGroups)
 
+# Now add the income group, level (income group as numeric), and hovertext to the map object
+# Also create a palette object based on the level. 
 worldMap$group <- devMap$group
 worldMap$level <- devMap$level
 worldMap$popup <- paste0(worldMap$NAME, ": ", worldMap$group)
-
 pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), worldMap$level)
+
+# Draw the map using leaflet
 map <- leaflet(worldMap, width = "100%") %>% 
     addTiles() %>% 
     setView(lat = 17, lng = -12, zoom = 1) %>% 
     addPolygons(stroke = TRUE, color = "#515151", weight = 1,
                 fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(level),
+                # Popup seems to disappear unless I use htmlEscape from the htmltools package. 
                 popup = htmltools::htmlEscape(worldMap$popup)) %>% 
     addLegend(position = "bottomleft",
               colors = c("#7882c0", "#ffe090", "#ffa590", "#6a9eb5"),
@@ -127,12 +143,9 @@ map <- leaflet(worldMap, width = "100%") %>%
               labels = c("Low-income", "Lower-middle-income", 
                          "Upper-middle-income", "High-income"))
 ```
-
-
 ```{r, echo = F, out.height="350px", out.width = "100%"}
 map
 ```
-
 
 Splitting up the data on export value by developing group does actually reveal some interesting insights. The graph below shows the export value for low-income, lower-middle-income and upper-middle-income groups (traditionally categorised as "developing countries"). 
 
@@ -160,8 +173,7 @@ allComsClean <- allComsRaw %>%
         grepl("Micronesia", .$country) ~ "Micronesia, Federated States of",
         grepl("Solomon", .$country) ~ "Solomon Islands",
         grepl("Macao", .$country) ~ "Macau",
-        TRUE ~ .$country),
-        commodity = ifelse(grepl("oil", commodity), "Oil", commodity)
+        TRUE ~ .$country)
     ) %>% 
     # Merge with wbGroups to get income group
     full_join(., wbGroups) %>% 
@@ -177,60 +189,55 @@ allComsDev <- allComsClean%>%
     group_by(commodity, group) %>% 
     summarise(avValue = mean(totValue)) %>% 
     ungroup() %>% 
-    filter(commodity %in% c("Coal", "Coffee", "Copper", "Gold", "Maize", "Natural gas", "Palm oil", "Oil", "Soya beans", "Sugar", "Timber", "Wheat")) %>% 
-    mutate(commodity = ordered(commodity, levels = rev(commodity)))
+    # Only keeping a few selected commodities
+    filter(commodity %in% c("Coal", "Coffee", "Copper", "Gold", "Maize", "Natural gas", 
+                            "Palm oil", "Crude oil", "Soya beans", "Sugar", "Timber", "Wheat"))
 
 # Now plot three graphs for the bottom three groups
 p1 <- allComsDev %>% 
     filter(group == "Low-income") %>% 
-    # arrange(desc(avValue)) %>% 
-    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
-    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
-            type = "bar", orientation = "h", 
-            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
-            hoverinfo = "text",
-            marker = list(color = "#ffa590")) %>% 
-    layout(title = "Commodity exports by income group",
-           annotations = list(x = 0, y = 11, text = "Low-income", showarrow = FALSE,
-                              align = "left", xref = "paper"),
-           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0),
-           showlegend = FALSE, 
-           font = list(family = "sans-serif", color = "#515151"))
-p2 <- allComsDev %>% 
-    filter(group == "Lower-middle-income") %>% 
-    # arrange(desc(avValue)) %>% 
-    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
-    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
-            type = "bar", orientation = "h", 
-            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
-            hoverinfo = "text",
-            marker = list(color = "#ffe090")) %>% 
-    layout(annotations = list(x = 0, y = 11, text = "Lower-middle-income", showarrow = FALSE,  xref = "paper", xanchor = "left"),
-           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           xaxis = list(title = "US$ Billion", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0),
-           showlegend = FALSE,
-           font = list(family = "sans-serif", color = "#515151"))
-p3 <- allComsDev %>% 
-    filter(group == "Upper-middle-income") %>% 
-    # arrange(desc(avValue)) %>% 
-    # mutate(commodity = ordered(commodity, levels = rev(commodity))) %>% 
     plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
             type = "bar", orientation = "h", 
             text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
             hoverinfo = "text",
             marker = list(color = "#7882c0")) %>% 
-    layout(annotations = list(x = 0, y = 11, text = "Upper-middle-income", showarrow = FALSE, xanchor = "left", xref = "paper"),
-           yaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+    layout(title = "Commodity exports by income group",
+           annotations = list(x = 0, y = -1, text = "Low-income", showarrow = FALSE,
+                              align = "left", xref = "paper"),
+           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
            xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0),
+           margin = list(l = 0, t = 25),
+           showlegend = FALSE, 
+           font = list(family = "sans-serif", color = "#515151"))
+p2 <- allComsDev %>% 
+    filter(group == "Lower-middle-income") %>% 
+    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
+            type = "bar", orientation = "h", 
+            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
+            hoverinfo = "text",
+            marker = list(color = "#ffe090")) %>% 
+    layout(annotations = list(x = 0, y = -1, text = "Lower-middle-income", showarrow = FALSE,  xref = "paper", xanchor = "left"),
+           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
+           xaxis = list(title = "US$ Billion", showline = FALSE, zeroline = FALSE),
+           margin = list(l = 0, t = 25),
+           showlegend = FALSE,
+           font = list(family = "sans-serif", color = "#515151"))
+p3 <- allComsDev %>% 
+    filter(group == "Upper-middle-income") %>% 
+    plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
+            type = "bar", orientation = "h", 
+            text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
+            hoverinfo = "text",
+            marker = list(color = "#ffa590")) %>% 
+    layout(annotations = list(x = 0, y = -1, text = "Upper-middle-income", showarrow = FALSE, xanchor = "left", xref = "paper"),
+           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
+           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
+           margin = list(l = 0, t = 25),
            showlegend = FALSE,
            font = list(family = "sans-serif", color = "#515151"))
 ```
 
-```{r, echo = FALSE, out.width = "100%", out.height = "380px"}
+```{r, echo = FALSE, out.width = "100%", out.height = "400px"}
 plotly::subplot(p1, p2, p3,
                 nrows = 1, 
                 shareY = TRUE, shareX = FALSE,
