@@ -72,6 +72,11 @@ strong {
   text-decoration: none;
 }
 
+/* Want to space out icons in sidebar a bit */
+.iconLink .fa {
+  margin-right: 0.5rem;
+}
+
 /* Sidebar title */
 .sidebar h1 {
   font-size: 3rem;

@@ -39,37 +39,33 @@ htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relativ
 ```
 
 ```{r, include=FALSE}
+# Read in data from csv (for now, update function later)
 allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
     filter(!(commodity %in% c("Petroleum oil, non-crude", "Soya-bean oil", "Barley", "Olive oil", "Uranium"))) %>% 
     mutate(commodity = ifelse(grepl("Petroleum", commodity), "Crude oil", commodity))
+
+# Summarise by commodity group - get total value per year then average out over period
 allComsGroup <- allComsRaw %>% 
     group_by(commodity, year) %>% 
     summarise(totValue = sum(value)) %>% 
     group_by(commodity) %>% 
     summarise(avValue = mean(totValue)/1000000)
 ```
-```{r, include = F}
-allComsGroup %>% 
-    arrange(desc(avValue)) %>% 
-    knitr::kable(., row.names = TRUE,
-          digits = 0,
-          col.names = c("Commodity", "US$ million"),
-          align = c("lc"),
-          caption = "Average export value (2012 - 2015)",
-          format.args = list(big.mark = ","))
-
-```
 ```{r, echo = F, out.width = "100%", out.height = "380px"}
+# Plot the graph
 plot_ly(allComsGroup %>% 
             arrange(desc(avValue)) %>% 
-            mutate(commodity = ordered(commodity, levels = commodity)), 
+            mutate(commodity = gsub("Coffee", "<b>Coffee</b>", commodity),
+                   commodity = ordered(commodity, levels = commodity)), 
         x = ~commodity, y = ~avValue/1000, type = "bar", 
-        # orientation = "h", 
-        text = ~paste0(commodity, ": US$", round(avValue/1000, 1), " bln"), hoverinfo = "text", marker = list(color = "#619fb5")) %>% 
+        text = ~paste0(commodity, ": US$", round(avValue/1000, 1), " bln"), 
+        hoverinfo = "text", marker = list(color = c(rep("#619fb5", 10),
+                                                    "#ef8066",
+                                                    rep("#619fb5", 8)))) %>% 
     layout(title = "Average global export value (2012 - 2015)", 
            xaxis = list(title = "", showline = FALSE, tickangle = 325),
            yaxis = list(title = "Billion US$", zeroline = FALSE, separatethousands = TRUE),
-           margin = list(b = 80),
+           margin = list(b = 60),
            font = list(family = "sans-serif", color = "#515151"))
 ```
 
@@ -236,7 +232,6 @@ p3 <- allComsDev %>%
            showlegend = FALSE,
            font = list(family = "sans-serif", color = "#515151"))
 ```
-
 ```{r, echo = FALSE, out.width = "100%", out.height = "400px"}
 plotly::subplot(p1, p2, p3,
                 nrows = 1, 
@@ -246,12 +241,9 @@ plotly::subplot(p1, p2, p3,
     layout(margin = list(l = 70))
 ```
 
-*  Coffee much more important for the low-income countries
-*  This is mostly skewed by the relative importance of Ethiopia.
-*  Gold is weirdly high too (?)
-*  Anything else?
+Splitting the data up this way shows that coffee is relatively much more important for the low-income countries than the others, behind only gold. Out of the 30 low-income countries in the dataset, 20 are coffee producers, including high-profile origins like Ethiopia, Tanzania and Uganda. 
 
-For the low-income countries, coffee is relatively more important as an export crop. In fact, for those low-income countries that produce coffee, it accounts for a significant amount of their total export earnings. This is important, because commodity exports are an essential source of foreign exchange for many developing countries, yet international coffee prices are inherently volatile and unpredictable. 
+In fact, for these low-income countries that produce coffee, it often accounts for a significant amount of their total export earnings. This is important, because commodity exports are an essential source of foreign exchange for many developing countries, yet international coffee prices are inherently volatile and unpredictable. 
 
 Looking at those low-income, coffee-producing countries in a little more detail, we can see how much coffee drives their export earnings. The graph below shows the value of coffee exports as a percentage of total merchandise exports (according to World Bank data). 
 
@@ -291,7 +283,7 @@ wbCoffee <- inner_join(
     # Need to reverse order to get them large-small in bar chart
     mutate(country = ordered(country, levels = rev(country)))
 ```
-```{r, echo = FALSE, out.width = "100%", out.height = "308px"}
+```{r, echo = FALSE, out.width = "100%", out.height = "300px"}
 plot_ly(data = wbCoffee, x = ~coffeeShare * 100, y = ~country,
         type = "bar", orientation = "h", 
         text = ~paste0(round(100*coffeeShare, 1), "%"),
