@@ -1,12 +1,13 @@
 ---
 Categories: 
     - Blog
-Description: "Nope."
+Description: "Not really."
 Tags: 
     - Coffee
 date: 2017-04-25T16:20:48+01:00
 title: "Is coffee the second most traded commodity in the world?"
 thumbnail: "isCoffeeSecond.png"
+slug: "is-coffee-second"
 draft: true
 ---
 
@@ -24,11 +25,13 @@ One of the most widely known facts about coffee is that it's the second most tra
 
 But where does this fact come from, and what does it even mean? Are we talking the total value of coffee in the world, or the volume, or the number of contracts? Oil is undoubtedly one of the most important commodities to the global economy, but is coffee really number 2?
 
+#### The coffee market
+
 According to the International Coffee Organization (*disclaimer - I used to work there*), total exports of coffee in 2015/16 (the ICO uses the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
 
 The total value of crude oil exports, on the other hand, was some US$765 billion in 2015, and US$1.4 trillion the year before, for a volume of around 1.8 billion tonnes. That's quite a large gap. 
 
-### Global context
+#### Global context
 
 To compare the value of coffee to other commodities, I'm going to use the UN Comtrade International Trade Statistics Database, which seems to be the most comprehensive set of figures available, and also has a nice open API.
 
@@ -71,7 +74,7 @@ plot_ly(allComsGroup %>%
 
 Looking at this graph, coffee seems to be a long way from the top. The most valuable commodities are mostly energy or precious metals. Out of the agricultural commodities, soya beans are leading the way, presumably due to their use in livestock feed, driven by increasing demand for meat. Wheat and maize (corn) are also more valuable export crops worldwide than coffee. At first glance, it's difficult to find anything remarkable about the coffee trade. 
 
-### Coffee and international development
+#### Coffee and international development
 
 One permutation of this factoid is that coffee is the second most traded commodity by developing countries. 
 
@@ -112,7 +115,7 @@ wbGroups <- bind_rows(
     data_frame(country = c("Andorra", "Gibraltar", "Oman", "Antigua and Barbuda", "Greece", "Poland", "Aruba", "Greenland", "Portugal", "Australia", "Guam", "Puerto Rico", "Austria", "Hong Kong", "Qatar", "Bahamas", "Hungary", "San Marino", "Bahrain", "Iceland", "Saudi Arabia", "Barbados", "Ireland", "Seychelles", "Belgium", "Isle of Man", "Singapore", "Bermuda", "Israel", "British Virgin Islands", "Italy", "Slovakia", "Brunei Darussalam", "Japan", "Slovenia", "Canada", "South Korea", "Spain", "Cayman Islands", "Kuwait", "Saint Kitts and Nevis", "Latvia", "Chile", "Liechtenstein", "Sweden", "Croatia", "Lithuania", "Switzerland",  "Luxembourg", "Taiwan", "Cyprus", "Macau", "Trinidad and Tobago", "Czech Republic", "Malta", "Denmark", "Monaco", "United Arab Emirates", "Estonia", "Nauru", "United Kingdom", "Faroe Islands", "Netherlands", "United States", "Finland", "New Caledonia", "Uruguay", "France", "New Zealand", "United States Virgin Islands", "French Polynesia", "Northern Mariana Islands", "Germany", "Norway")) %>% mutate(group = "High-income", level = 4)
 )
 
-# Get full list of countries; needs to match order of world_spdf for the map. 
+# Get full list of countries; needs to match order of worldMap for the map. 
 devMap <- full_join(
     data_frame(country = worldMap$NAME), 
     wbGroups)
@@ -127,7 +130,7 @@ pal <- colorNumeric(c("#a5acdc", "#ffeab6", "#ffc4b6", "#9bc4d6"), worldMap$leve
 # Draw the map using leaflet
 map <- leaflet(worldMap, width = "100%") %>% 
     addTiles() %>% 
-    setView(lat = 17, lng = -12, zoom = 1) %>% 
+    setView(lat = 25, lng = -12, zoom = 1) %>% 
     addPolygons(stroke = TRUE, color = "#515151", weight = 1,
                 fillOpacity = 1, smoothFactor = 0.5, fillColor = ~pal(level),
                 # Popup seems to disappear unless I use htmlEscape from the htmltools package. 
@@ -143,7 +146,7 @@ map <- leaflet(worldMap, width = "100%") %>%
 map
 ```
 
-Splitting up the data on export value by developing group does actually reveal some interesting insights. The graph below shows the export value for low-income, lower-middle-income and upper-middle-income groups (traditionally categorised as "developing countries"). 
+Splitting up the data on export value by income group does actually reveal some interesting insights. The graph below shows the export value for low-income, lower-middle-income and upper-middle-income groups (traditionally categorised as "developing countries"). 
 
 ```{r, include = FALSE}
 # Need to do some tidying to allComsRaw country names, then merge with World Bank income groups
@@ -296,7 +299,7 @@ plot_ly(data = wbCoffee, x = ~coffeeShare * 100, y = ~country,
            font = list(family = "sans-serif", color = "#515151"))
 ```
 
-### Conclusions
+#### Conclusions
 
 Assessing the relative value of traded commodities worldwide is enormously complicated - each goes through its own various stages of processing and transactions to render any blanket comparison largely meaningless. That said, the coffee is evidently **not** the second most traded commodity worldwide after oil. 
 

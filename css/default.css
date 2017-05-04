@@ -12,7 +12,7 @@ strong {
 }
 
 /*
- * Sidebar: 3 different sizes: 0-48em (768px), 48-64em (1024px), 64em+
+ * Sidebar: Starts fixed on the left, then moves up for phones/tablets (<992px)
 */
 
 .sidebar {
@@ -35,8 +35,6 @@ strong {
   bottom: 0px;
   list-style: none;
 }
-
-
 
 /* Side bar description*/
 .sidebar-nav p {
@@ -83,7 +81,9 @@ strong {
   color: white;
 }
 
-/* Add bottom margin after each post on homepage*/
+/* Add margin to each post on homepage
+   NB Also use this class for most content
+   */
 .post {
   padding: 2rem;
   margin-bottom: 4rem;
@@ -175,11 +175,9 @@ a:hover#tags {
 
 /* Profile picture thumbnail */
 .img-thumbnail {
-  /*width: 80%;*/
-  /*height:80%;*/
+  margin: 0.5rem;
+  margin-top: 0;
   border-radius: 50%;
-  /*margin:0 auto;*/
-  /*align:"middle";*/
 }
 
 /* Want to keep table captions at the top */
@@ -234,4 +232,14 @@ caption {
   .post {
     padding: 1rem 0.5rem;
   }
+
+/* Reduce thumbnail size for phones */
+  .img-thumbnail {
+    margin: 0.5rem;
+    margin-top: 0;
+    border-radius: 50%;
+    max-width: 170px;
+    max-height: 170px;
+  }
+
 }
