@@ -21,7 +21,10 @@ basedir <- "~/Dropbox/Work/coffeestats"
 
 One of the most widely known facts about coffee is that it's the second most traded commodity in the world, after oil. It's such common knowledge that Google even helpfully points it out. 
 
-![Google-being-helpful](/img/google-being-helpful.png)
+```{r, echo = FALSE}
+htmltools::HTML('<p><a href = "https://www.google.co.uk/search?q=is+coffee+the+second+most+traded+commodity+in+the+world" target = "_blank"><img src = "/img/google-being-helpful.png" alt = "google-being-helpful"></a></p>')
+```
+<!-- [![Google-being-helpful](/img/google-being-helpful.png)](https://www.google.co.uk/search?q=is+coffee+the+second+most+traded+commodity+in+the+world) -->
 
 But where does this fact come from, and what does it even mean? Are we talking the total value of coffee in the world, or the volume, or the number of contracts? Oil is undoubtedly one of the most important commodities to the global economy, but is coffee really number 2?
 
@@ -76,7 +79,11 @@ Looking at this graph, coffee seems to be a long way from the top. The most valu
 
 #### Coffee and international development
 
-One permutation of this factoid is that coffee is the second most traded commodity by developing countries. 
+One permutation of this factoid is that coffee is the second most traded commodity by developing countries, for example here in the 2016 Pact Coffee Social Impact Report. 
+
+```{r, echo = FALSE}
+htmltools::HTML('<p><a href = "https://media.pactcoffee.com/files/Pact_Social_Impact_Report_2016.pdf" target = "_blank"><img src = "/img/coffee-developing-countries.png" alt = "pact-coffee-report"></a></p>')
+```
 
 There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is accrued in countries that don't even grow it - the largest exporter of roasted coffee worldwide, for example, is Germany. 
 
