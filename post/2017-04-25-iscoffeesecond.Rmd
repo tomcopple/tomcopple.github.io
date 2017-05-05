@@ -30,7 +30,7 @@ But where does this fact come from, and what does it even mean? Are we talking t
 
 #### The coffee market
 
-According to the International Coffee Organization (*disclaimer - I used to work there*), total exports of coffee in 2015/16 (the ICO uses the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
+According to the International Coffee Organization, total exports of coffee in 2015/16 (the ICO uses the October - September coffee marketing year) were estimated at US$20.1 billion, for a volume of 104.8 million 60kg bags (approximately 6 million tons). This value has generally ranged from between 19 and 23 billion dollars over the last five years, depending on global price levels. 
 
 The total value of crude oil exports, on the other hand, was some US$765 billion in 2015, and US$1.4 trillion the year before, for a volume of around 1.8 billion tonnes. That's quite a large gap. 
 
@@ -79,7 +79,7 @@ Looking at this graph, coffee seems to be a long way from the top. The most valu
 
 #### Coffee and international development
 
-One permutation of this factoid is that coffee is the second most traded commodity by developing countries, for example here in the 2016 Pact Coffee Social Impact Report. 
+One permutation of this factoid is that coffee is the second most traded commodity by developing countries, for example as seen here in the 2016 Pact Coffee Social Impact Report:
 
 ```{r, echo = FALSE}
 htmltools::HTML('<p><a href = "https://media.pactcoffee.com/files/Pact_Social_Impact_Report_2016.pdf" target = "_blank"><img src = "/img/coffee-developing-countries.png" alt = "pact-coffee-report"></a></p>')
@@ -251,7 +251,7 @@ plotly::subplot(p1, p2, p3,
     layout(margin = list(l = 70))
 ```
 
-Splitting the data up this way shows that coffee is relatively much more important for the low-income countries than the others, behind only gold. Out of the 30 low-income countries in the dataset, 20 are coffee producers, including high-profile origins like Ethiopia, Tanzania and Uganda. 
+It can be seen here that coffee is relatively much more important for the low-income countries than the others; an average value of US$1.3 billion per year is behind only gold on US$4.5 billion. Coffee exports are much less significant for the other income groups, even if the absolute values are higher. Out of the 30 low-income countries in the dataset, 20 are coffee producers, including high-profile origins like Ethiopia, Tanzania and Uganda. 
 
 In fact, for these low-income countries that produce coffee, it often accounts for a significant amount of their total export earnings. This is important, because commodity exports are an essential source of foreign exchange for many developing countries, yet international coffee prices are inherently volatile and unpredictable. 
 
@@ -308,9 +308,9 @@ plot_ly(data = wbCoffee, x = ~coffeeShare * 100, y = ~country,
 
 #### Conclusions
 
-Assessing the relative value of traded commodities worldwide is enormously complicated - each goes through its own various stages of processing and transactions to render any blanket comparison largely meaningless. That said, the coffee is evidently **not** the second most traded commodity worldwide after oil. 
+Assessing the relative value of traded commodities worldwide is enormously complicated - each goes through its own various stages of processing and transactions to render any blanket comparison largely meaningless. That said, coffee is evidently **not** the second most traded commodity worldwide after oil. This is a myth that needs to be retired. 
 
-That said, coffee **is** a hugely important export crop for many developing countries, in the case of Burundi accounting for nearly 40% of total merchandise exports. For these countries, coffee isn't just the second most important commodity, it's much more important than that. 
+On the other hand, coffee **is** a hugely important export crop for many developing countries, in the case of Burundi accounting for nearly 40% of total merchandise exports. For these countries, coffee isn't just the second most important commodity, it's much more important than that. 
 
 ```{r, echo = FALSE}
 htmltools::HTML("<p class = 'message'>The entire source code for this article is available <a href = 'https://github.com/tomcopple/tomcopple.github.io/blob/hugo/content/post/2017-04-25-iscoffeesecond.Rmd' target = '_blank'>here</a>.</p>")
