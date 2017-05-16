@@ -14,7 +14,7 @@ tags:
 library(knitr)
 knitr::include_app(
     url = "https://tomcopple.shinyapps.io/traktratings/",
-    height = "900px"
+    height = "1154"
 )
 ```
 
