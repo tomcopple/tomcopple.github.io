@@ -15,3 +15,11 @@ draft: true
 
 
 This is a test page for a potential project. 
+
+```{r, echo = FALSE, out.width = "100%"}
+library(knitr)
+knitr::include_app(
+    url = "https://tomcopple.shinyapps.io/lastfmshiny/",
+    height = "1154"
+)
+```

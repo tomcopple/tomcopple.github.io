@@ -14,15 +14,15 @@ draft: true
 ```{r setup, include = FALSE}
 library(tidyverse);library(plotly);library(knitr);library(blogdown)
 library(leaflet);library(rgdal);library(htmltools)
-basedir <- "~/Dropbox/Work/coffeestats"
+coffeestats <- "~/Dropbox/Work/coffeestats"
 ```
-
-### [DRAFT - do not publish yet]
 
 One of the most widely known facts about coffee is that it's the second most traded commodity in the world, after oil. It's such common knowledge that Google even helpfully points it out. 
 
 ```{r, echo = FALSE}
-htmltools::HTML('<p><a href = "https://www.google.co.uk/search?q=is+coffee+the+second+most+traded+commodity+in+the+world" target = "_blank"><img src = "/img/google-being-helpful.png" alt = "google-being-helpful"></a></p>')
+htmltools::HTML('<p><a href="https://www.google.co.uk/search?q=is+coffee+the+second+most+traded+commodity+in+the+world" target="_blank">
+                <img src="/img/google-being-helpful.png" alt="google-being-helpful">
+                </a></p>')
 ```
 
 But where does this fact come from, and what does it even mean? Are we talking the total value of coffee in the world, or the volume, or the number of contracts? Oil is undoubtedly one of the most important commodities to the global economy, but is coffee really number 2?
@@ -44,29 +44,78 @@ htmltools::HTML('<p class = "message">A note on data: "Commodities" is a relativ
 ```
 
 ```{r, include=FALSE}
-# Read in data from csv (for now, update function later)
-allComsRaw <- read_csv(file.path(basedir, "output", "allCommodities.csv")) %>% 
-    filter(!(commodity %in% c("Petroleum oil, non-crude", "Soya-bean oil", "Barley", "Olive oil", "Uranium"))) %>% 
-    mutate(commodity = ifelse(grepl("Petroleum", commodity), "Crude oil", commodity))
+# Import data from UN Comtrade using their API service
+# First, define a function to get a specific commodity
+getCommodity <- function(shortName, hsCode) {
+    
+    unComtradeURL <- "http://comtrade.un.org/api/get?max=50000&type=C&fmt=json&freq=A&px=HS&ps=recent&r=all&p=0&rg=2&cc="
+    
+    # Get the URL for the specified commodity
+    getURL <- paste0(unComtradeURL, hsCode) 
+    
+    # Get the JSON result and simplify into text
+    getJSON <- httr::GET(getURL) %>% 
+        httr::content(., as = 'text') %>% 
+        jsonlite::fromJSON(., simplifyDataFrame = T, flatten = T)
+    
+    # Just keep the relevant data, add the short name of the commodity for identification
+    getData <- getJSON$dataset %>% 
+        select(year = yr, country = rtTitle, countryCode = rt3ISO,
+               value = TradeValue, hsCode = cmdCode) %>% 
+        mutate(commodity = shortName) %>% 
+        as_data_frame()
+    
+    getData
+}
+
+# Create a list of the the commodities and their HS codes
+# (Probably an easier way of doing this)
+commodities <- data_frame(
+    "Banana" = "0803",
+    "Coal" = "2701",
+    "Cocoa" = "1801",
+    "Coffee" = "0901",
+    "Copper" = "2603",
+    "Cotton" = "5201",
+    "Crude oil" = "2709",
+    "Fruit juice" = "2009",
+    "Gold" = "7108",
+    "Maize" = "1005",
+    "Natural gas" = "2711",
+    "Palm oil" = "1511",
+    "Rice" = "1006",
+    "Rubber" = "4001",
+    "Soya beans" = "1201",
+    "Sugar" = "1701",
+    "Tea" = "0902",
+    "Timber" = "4407",
+    "Wheat" = "1001"
+) %>% 
+    gather(key = shortName, value = hsCode)
+
+# Then apply the function to each commodity to get a new dataframe
+# allCommodities <- purrr::map2_df(commodities$shortName, commodities$hsCode, getCommodity)
+# I'm just going to import from csv for now
+# write_csv(allCommodities, "~/Dropbox/Work/coffeestats/output/allCommodities.csv")
+allCommodities <- read_csv(file.path(coffeestats, "output/allCommodities.csv"))
 
 # Summarise by commodity group - get total value per year then average out over period
-allComsGroup <- allComsRaw %>% 
+allComsGroup <- allCommodities %>% 
     group_by(commodity, year) %>% 
     summarise(totValue = sum(value)) %>% 
     group_by(commodity) %>% 
     summarise(avValue = mean(totValue)/1000000)
 ```
 ```{r, echo = F, out.width = "100%", out.height = "380px"}
-# Plot the graph
+# Plot a graph of average global exports for each commodity over the last 5 years
 plot_ly(allComsGroup %>% 
             arrange(desc(avValue)) %>% 
             mutate(commodity = gsub("Coffee", "<b>Coffee</b>", commodity),
                    commodity = ordered(commodity, levels = commodity)), 
         x = ~commodity, y = ~avValue/1000, type = "bar", 
         text = ~paste0(commodity, ": US$", round(avValue/1000, 1), " bln"), 
-        hoverinfo = "text", marker = list(color = c(rep("#619fb5", 10),
-                                                    "#ef8066",
-                                                    rep("#619fb5", 8)))) %>% 
+        hoverinfo = "text", 
+        marker = list(color = c(rep("#619fb5", 10), "#ef8066", rep("#619fb5", 8)))) %>% 
     layout(title = "Average global export value (2012 - 2015)", 
            xaxis = list(title = "", showline = FALSE, tickangle = 325),
            yaxis = list(title = "Billion US$", zeroline = FALSE, separatethousands = TRUE),
@@ -78,11 +127,9 @@ Looking at this graph, coffee seems to be a long way from the top. The most valu
 
 #### Coffee and international development
 
-One permutation of this factoid is that coffee is the second most traded commodity by developing countries, for example as seen here in the 2016 Pact Coffee Social Impact Report:
+One permutation of this factoid is that coffee is the second most traded commodity by *developing* countries, for example in the 2016 Pact Coffee Social Impact Report, available `r htmltools::HTML('<a href = "https://media.pactcoffee.com/files/Pact_Social_Impact_Report_2016.pdf" target = "_blank">here</a>')`:
 
-```{r, echo = FALSE}
-htmltools::HTML('<p><a href = "https://media.pactcoffee.com/files/Pact_Social_Impact_Report_2016.pdf" target = "_blank"><img src = "/img/coffee-developing-countries.png" alt = "pact-coffee-report"></a></p>')
-```
+![pact-coffee-report](/img/coffee-developing-countries.png)
 
 There's certainly a strong connection between coffee and development. Coffee is predominantly produced in developing countries and consumed in developed countries. Also, most of the value added from processing coffee is accrued in countries that don't even grow it - the largest exporter of roasted coffee worldwide, for example, is Germany. 
 
@@ -94,7 +141,7 @@ For the purposes of this article, I'm going to use the World Bank lending groups
 
 ```{r, include=F}
 # Download the zip file from here; http://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip and unzip into the working directory. 
-worldMap <- readOGR(dsn = path.expand(file.path(basedir, "input", "worldmap", "world_shape_file")),
+worldMap <- readOGR(dsn = path.expand(file.path(coffeestats, "input", "worldmap", "world_shape_file")),
                     layer = "TM_WORLD_BORDERS_SIMPL-0.3")
 
 # Need to change some country names
@@ -156,7 +203,7 @@ Splitting up the data on export value by income group does actually reveal some 
 
 ```{r, include = FALSE}
 # Need to do some tidying to allComsRaw country names, then merge with World Bank income groups
-allComsClean <- allComsRaw %>% 
+allComsClean <- allCommodities %>% 
     mutate(country = case_when(
         grepl("Bosnia", .$country) ~ "Bosnia and Herzegovina",
         grepl("Czechia", .$country) ~ "Czech Republic",
@@ -206,14 +253,13 @@ p1 <- allComsDev %>%
             text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
             hoverinfo = "text",
             marker = list(color = "#7882c0")) %>% 
-    layout(title = "Commodity exports by income group",
-           annotations = list(x = 0, y = -1, text = "Low-income", showarrow = FALSE,
-                              align = "left", xref = "paper"),
-           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
-           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0, t = 25),
-           showlegend = FALSE, 
-           font = list(family = "sans-serif", color = "#515151"))
+    add_annotations(text = "Low-income", font = list(family = "sans-serif", color = "#515151"),
+                    bgcolor = "#FFFFFF", borderpad = 4, showarrow = FALSE, 
+                    x = 0, xref = "x", xanchor = "left",
+                    y = -1) %>% 
+    layout(yaxis = list(title = "", autorange = "reversed"),
+           xaxis = list(title = "", zeroline = FALSE)
+           )
 p2 <- allComsDev %>% 
     filter(group == "Lower-middle-income") %>% 
     plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
@@ -221,12 +267,13 @@ p2 <- allComsDev %>%
             text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
             hoverinfo = "text",
             marker = list(color = "#ffe090")) %>% 
-    layout(annotations = list(x = 0, y = -1, text = "Lower-middle-income", showarrow = FALSE,  xref = "paper", xanchor = "left"),
-           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
-           xaxis = list(title = "US$ Billion", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0, t = 25),
-           showlegend = FALSE,
-           font = list(family = "sans-serif", color = "#515151"))
+    add_annotations(text = "Lower-middle-income", font = list(family = "sans-serif", color = "#515151"),
+                    bgcolor = "#FFFFFF", borderpad = 4, showarrow = FALSE, 
+                    x = 0, xref = "x2", xanchor = "left",
+                    y = -1) %>% 
+    layout(yaxis = list(title = "", autorange = "reversed"),
+           xaxis = list(zeroline = FALSE)
+           )
 p3 <- allComsDev %>% 
     filter(group == "Upper-middle-income") %>% 
     plot_ly(data = ., x = ~avValue/1000000000, y = ~commodity, 
@@ -234,20 +281,23 @@ p3 <- allComsDev %>%
             text = ~paste0(commodity, ": US$", round(avValue/1000000000, 1), "bn"),
             hoverinfo = "text",
             marker = list(color = "#ffa590")) %>% 
-    layout(annotations = list(x = 0, y = -1, text = "Upper-middle-income", showarrow = FALSE, xanchor = "left", xref = "paper"),
-           yaxis = list(title = "", showline = FALSE, autorange = "reversed"),
-           xaxis = list(title = "", showline = FALSE, zeroline = FALSE),
-           margin = list(l = 0, t = 25),
-           showlegend = FALSE,
-           font = list(family = "sans-serif", color = "#515151"))
+    add_annotations(text = "Upper-middle-income", font = list(family = "sans-serif", color = "#515151"),
+                    bgcolor = "#FFFFFF", borderpad = 4, showarrow = FALSE, 
+                    x = 0, xref = "x3", xanchor = "left",
+                    y = -1) %>% 
+    layout(yaxis = list(title = "", autorange = "reversed"),
+           xaxis = list(title = "", zeroline = FALSE)
+           )
 ```
 ```{r, echo = FALSE, out.width = "100%", out.height = "400px"}
-plotly::subplot(p1, p2, p3,
-                nrows = 1, 
-                shareY = TRUE, shareX = FALSE,
-                titleX = TRUE, titleY = TRUE,
+plotly::subplot(p1, p2, p3, nrows = 1, 
+                shareY = TRUE, titleX = TRUE,
                 which_layout = 1) %>% 
-    layout(margin = list(l = 70))
+    layout(title = "Commodity exports by income group",
+           xaxis2 = list(title = "US$ Billion"),
+           margin = list(l = 70),
+           showlegend = FALSE, 
+           font = list(family = "sans-serif", color = "#515151"))
 ```
 
 It can be seen here that coffee is relatively much more important for the low-income countries than the others; an average value of US$1.3 billion per year is behind only gold on US$4.5 billion. Coffee exports are much less significant for the other income groups, even if the absolute values are higher. Out of the 30 low-income countries in the dataset, 20 are coffee producers, including high-profile origins like Ethiopia, Tanzania and Uganda. 
@@ -312,6 +362,8 @@ Assessing the relative value of traded commodities worldwide is enormously compl
 On the other hand, coffee **is** a hugely important export crop for many developing countries, in the case of Burundi accounting for nearly 40% of total merchandise exports. For these countries, coffee isn't just the second most important commodity, it's much more important than that. 
 
 ```{r, echo = FALSE}
-htmltools::HTML("<p class = 'message'>The entire source code for this article is available <a href = 'https://github.com/tomcopple/tomcopple.github.io/blob/hugo/content/post/2017-04-25-iscoffeesecond.Rmd' target = '_blank'>here</a>.</p>")
+htmltools::HTML("<p class = 'message'>
+                I originally started writing this article about a month ago, as it's been one of my pet peeves for a while. Since then, the issue has been covered in some depth following a comment by a Starbucks representative to the US Senate. This was picked up by Politifact, and subsequently the excellent Perfect Daily Grind website. Their coverage is available <a href='http://www.politifact.com/global-news/statements/2017/may/08/starbucks-coffee/no-coffee-not-second-most-traded-commodity-after-o/' target='_blank'>here</a> and <a href='https://www.perfectdailygrind.com/2017/05/coffee-isnt-worlds-2nd-traded-commodity-important/' target='_blank'>here</a>, but I still thought it worthwhile adding my thoughts to the conversation. 
+                </p>")
 ```
 
