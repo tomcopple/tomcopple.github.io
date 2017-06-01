@@ -8,7 +8,7 @@ date: 2017-06-02
 title: "Is coffee the second most traded commodity in the world?"
 thumbnail: "isCoffeeSecond.png"
 slug: "is-coffee-second"
-draft: true
+draft: false
 ---
 
 ```{r setup, include = FALSE}

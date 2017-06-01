@@ -7,12 +7,25 @@
   </url>
   
   <url>
-    <loc>http://www.tomcopple.coffee/2017/04/20/test-page/</loc>
-    <lastmod>2017-04-20T00:00:00+00:00</lastmod>
+    <loc>http://www.tomcopple.coffee/2017/06/02/is-coffee-second/</loc>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.tomcopple.coffee/categories/blog/</loc>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.tomcopple.coffee/categories/</loc>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.tomcopple.coffee/tags/coffee/</loc>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -24,18 +37,13 @@
   
   <url>
     <loc>http://www.tomcopple.coffee/post/</loc>
-    <lastmod>2017-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.tomcopple.coffee/tags/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.tomcopple.coffee/tags/test/</loc>
-    <lastmod>2017-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2017-06-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
