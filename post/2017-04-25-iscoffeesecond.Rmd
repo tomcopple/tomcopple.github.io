@@ -1,10 +1,10 @@
 ---
 Categories: 
     - Blog
-Description: "Not really."
+Description: "No. It's much more important than that."
 Tags: 
     - Coffee
-date: 2017-04-25T16:20:48+01:00
+date: 2017-06-02
 title: "Is coffee the second most traded commodity in the world?"
 thumbnail: "isCoffeeSecond.png"
 slug: "is-coffee-second"
