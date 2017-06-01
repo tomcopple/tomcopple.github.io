@@ -2,39 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>tomcopple.coffee/about/</loc>
+    <loc>http://www.tomcopple.coffee/about/</loc>
     <lastmod>2017-06-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/2017/04/20/test-page/</loc>
+    <loc>http://www.tomcopple.coffee/2017/04/20/test-page/</loc>
     <lastmod>2017-04-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/categories/</loc>
+    <loc>http://www.tomcopple.coffee/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/</loc>
+    <loc>http://www.tomcopple.coffee/</loc>
     <lastmod>2017-06-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/post/</loc>
+    <loc>http://www.tomcopple.coffee/post/</loc>
     <lastmod>2017-04-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/tags/</loc>
+    <loc>http://www.tomcopple.coffee/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>tomcopple.coffee/tags/test/</loc>
+    <loc>http://www.tomcopple.coffee/tags/test/</loc>
     <lastmod>2017-04-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
