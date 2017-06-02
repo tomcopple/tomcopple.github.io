@@ -79,6 +79,7 @@ strong {
 .sidebar h1 {
   font-size: 3rem;
   color: white;
+  font-style: italic;
 }
 
 /* Add margin to each post on homepage
