@@ -9,7 +9,7 @@ thumbnail: "couldVietnam.png"
 title: "Could Vietnam become the world's main source of coffee?"
 slug: "could-vietnam-become-number-1"
 draft: true
-summaryText: <p>In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil. <p><img src="/img/vnHeadlinesCollage.png" /><p>This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?<p>
+summaryText: <p>In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil. <p><img src="/img/vnHeadlinesCollage2.png" /><p>This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?<p>
 ---
 ```{r, include = FALSE}
 coffeestats <- "~/Dropbox/Work/coffeestats"
@@ -23,7 +23,7 @@ library(tabulizer);library(pdftools);library(stringr)
 
 In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil to become the world's top coffee exporter that month. 
 
-![vietnam-headlines](/img/vnHeadlinesCollage.png)
+![vietnam-headlines](/img/vnHeadlinesCollage2.png)
 
 This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?
 
@@ -53,7 +53,9 @@ splitLoess <- exports %>%
     unnest() %>%
     select(country, monthFac, volume, .fitted, .se.fit) %>%
     group_by(country, monthFac) %>%
-    mutate(mean = mean(volume)) %>%
+    mutate(mean = mean(volume)/1000000,
+           .fitted = .fitted/1000000,
+           .se.fit = .se.fit/1000000) %>%
     ungroup() %>%
     distinct(country, monthFac, mean, .fitted, .se.fit)
 ```
@@ -63,45 +65,57 @@ plot_ly() %>%
     add_trace(name = "Brazil", legendgroup = "Brazil", showlegend = FALSE,
               data = filter(splitLoess, country == "Brazil"),
               marker = list(color = blogColours[1]),
+              text = ~paste0("(Brazil) ", monthFac, " average exports: ", round(mean, 1), " m bags"),
+              hoverinfo = "text",
               x = ~monthFac, y = ~mean, type = "scatter", mode = "markers") %>%
     ## Brazil loess curve
     add_lines(name = "Brazil", legendgroup = "Brazil",
               data = filter(splitLoess, country == "Brazil"),
               line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = blogColours[1]),
+              text = ~"Brazil", hoverinfo = "text",
               x = ~monthFac, y = ~.fitted) %>%
     ## Brazil confidence interval
     add_ribbons(data = filter(splitLoess, country == "Brazil"),
                 name = "Brazil", legendgroup = "Brazil", showlegend = FALSE,
-                x = ~monthFac,
-                line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = paste0(blogColours[1], "80")),
-                fillcolor = paste0(blogColours[1], "80"),
+                x = ~monthFac, hoverinfo = "none",
+                line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = paste0(blogColours[1], "40")),
+                fillcolor = paste0(blogColours[1], "59"),
                 ymin = ~.fitted - 1.96*.se.fit,
                 ymax = ~.fitted + 1.96*.se.fit) %>%
     ## Vietnam average points
     add_trace(legendgroup = "Vietnam", showlegend = FALSE,
               data = filter(splitLoess, country == "Vietnam"),
               marker = list(color = blogColours[2]),
+              text = ~paste0("(Vietnam) ", monthFac, " average exports: ", round(mean, 1), " m bags"),
+              hoverinfo = "text",
               x = ~monthFac, y = ~mean, type = "scatter", mode = "markers") %>%
     ## Vietnam loess curve
     add_lines(name = "Vietnam", legendgroup = "Vietnam",
               data = filter(splitLoess, country == "Vietnam"),
               line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = blogColours[2]),
+              text = ~"Vietnam", hoverinfo = "text",
               x = ~monthFac, y = ~.fitted) %>%
     ## Vietnam confidence interval
     add_ribbons(data = filter(splitLoess, country == "Vietnam"),
                 name = "Vietnam", legendgroup = "Vietnam", showlegend = FALSE,
-                x = ~monthFac,
-                line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = paste0(blogColours[2], "80")),
-                 fillcolor = paste0(blogColours[2], "80"),
+                x = ~monthFac, hoverinfo = "none",
+                line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = paste0(blogColours[2], "40")),
+                 fillcolor = paste0(blogColours[2], "59"),
                ymin = ~.fitted - 1.96*.se.fit,
                 ymax = ~.fitted + 1.96*.se.fit) %>%
+    add_annotations(x = 1.15, y = -0.15, 
+                    xref = "paper", yref = "paper", 
+                    showarrow = F,
+                    xanchor = "right",
+                    text = "<i>Sources: UN Comtrade, General Department of Vietnam Customs, ICO</i>") %>%
     layout(title = "Average exports by Brazil and Vietnam",
            xaxis = list(title = "", showgrid = FALSE),
            yaxis = list(title = "Million 60kg bags"),
-           font = list(color = "#515151"))
+           margin = list(b = 60),
+           font = list(color = "#515151", family = "sans-serif"))
 ```
 
-The two countries follow diametrically opposite crop cycles over the course of the year, so it might not come as a huge shock that Vietnam does occasionally exceed Brazil between February and April. Over the course of a year, Brazil is still well ahead, exporting around 35 million bags per year on average compared to Vietnam's 25 million. 
+The two countries follow diametrically opposite crop cycles over the course of the year, so it might not come as a huge shock that Vietnam does occasionally exceed Brazil between February and April. Over the course of a year though, Brazil is still well ahead, exporting around 35 million bags per year on average compared to Vietnam's 25 million. 
 
 That said, the export numbers are surprisingly close given the disparity in size between the two countries. Coffee is synonymous with Brazil, and has been for a very long time, whereas Vietnam doesn't exactly have the reputation of, say, Colombia, Ethiopia or Costa Rica. 
 
@@ -109,7 +123,7 @@ To see how we got here, and how these trends might develop in the future, it's u
 
 ### History
 
-Brazil has been the largest coffee producer in the world since the ICO's records began in the 1960s, but Vietnam is a very different story. It only really started producing coffee in significant quantities in the early 1990s, and has grown since then to become the second largest producer of coffee in the world, and the single most important source of Robusta coffee.
+Brazil has been the largest coffee producer in the world since the International Coffee Organization (ICO)'s records began in the 1960s, but Vietnam is a very different story. It only really started producing coffee in significant quantities in the early 1990s, and has grown rapidly since then to become the second largest producer of coffee in the world, and the single most important source of Robusta coffee.
 
 ```{r, include = FALSE}
 source(file.path(coffeestats, "scripts/getProduction.R"))
@@ -160,7 +174,7 @@ pVnHist %>%
 
 Between them, Brazil and Vietnam now account for over half of world production, up from a third 20 years ago, and this market share is increasing. They have consolidated these leading positions in the coffee market by achieving some of the highest levels of productivity in the sector.
 
-According to data from the FAO, Vietnam records yields of nearly 2.5 tonnes per hectare, while Brazil averages around 1.4 tonnes. No other major producing country even comes close, as can be seen in the graph below.
+According to data from the UN Food and Agriculture Organization (FAO), Vietnam records yields of nearly 2.5 tonnes per hectare, while Brazil averages around 1.4 tonnes. No other major producing country even comes close, as can be seen in the graph below.
 
 ```{r, include = FALSE}
 # NB Download faostat.csv to input folder
@@ -184,7 +198,7 @@ plot_ly(pYieldData,
         marker = list(color = c(rep(blogColours[3], 8), blogColours[1], blogColours[2])),
         text = ~paste0(country, ": ", format(value, digits = 1, big.mark = ","), " kg/ha"),
         hoverinfo = "text") %>%
-    add_annotations(x = 1, y = -0.12, 
+    add_annotations(x = 1.02, y = -0.11, 
                     xref = "paper", yref = "paper", 
                     showarrow = F,
                     xanchor = "right",
@@ -193,7 +207,7 @@ plot_ly(pYieldData,
            xaxis = list(title = "(kg/ha)", separatethousands = TRUE, zeroline = FALSE),
            yaxis = list(title = ""),
            font  = list(family = "sans-serif", color = "#515151"),
-           margin = list(r = 20, b = 40),
+           margin = list(r = 20, b = 40, r = 20),
            showlegend = FALSE)
 ```
 
@@ -203,7 +217,7 @@ As a result of this consolidation, the world is becoming more dependent on just 
 
 ### Recent trends
 
-While Brazil and Vietnam account for an increasing share of the coffee market, their future expansion might be more limited. In the last few years, both countries have been hit by severe droughts which have curtailed output growth. In Brazil, lower production in Espirito Santo, the main Robusta-producing region, has led to an internal debate over whether or not to allow imports from Vietnam in order to supply the local market; this would have been unthinkable in previous years.
+While Brazil and Vietnam account for an increasing share of the coffee market, their future expansion might be more limited. In the last few years, both countries have been hit by severe droughts which have curtailed output growth. In Brazil, lower production in Espirito Santo, the main Robusta-producing region, has led to a fierce internal debate over whether or not to allow imports from Vietnam in order to supply the local market; this would have been unthinkable in previous years.
 
 ```{r, include = FALSE}
 pBr <- plot_ly(prodAll %>%
@@ -217,6 +231,10 @@ pBr <- plot_ly(prodAll %>%
               hoverinfo = "none",
               y = ~(fitted(loess(value~year, data = prodAll %>% 
                                      filter(Country == "Brazil", year >= "2000")))/1000)) %>%
+    add_annotations(text = "Brazil", font = list(family = "sans-serif", color = "#515151"),
+                    bgcolor = "#D9D9D9", borderpad = 4, showarrow = FALSE, width = 120,
+                    xref = "paper", x = 0.5, xanchor = "center",
+                    yref = "y", y = 62, yanchor = "top") %>%
     layout(yaxis = list(zeroline = FALSE))
 pVn <- plot_ly(prodAll %>%
                    filter(Country == "Vietnam", year >= "2000") %>%
@@ -229,6 +247,10 @@ pVn <- plot_ly(prodAll %>%
               hoverinfo = "none",
               y = ~(fitted(loess(value~year, data = prodAll %>%
                                      filter(Country == "Vietnam", year >= "2000")))/1000)) %>%
+    add_annotations(text = "Vietnam", font = list(family = "sans-serif", color = "#515151"),
+                    bgcolor = "#D9D9D9", borderpad = 4, showarrow = FALSE, width = 120,
+                    xref = "paper", x = 0.5, xanchor = "center",
+                    yref = "y", y = 62, yanchor = "top") %>%
     layout(yaxis = list(zeroline = FALSE))
 ```
 ```{r, echo = FALSE, out.width = "100%", out.height = "380px"}
@@ -243,10 +265,10 @@ subplot(pBr, pVn, shareY = FALSE, shareX = FALSE, titleY = FALSE) %>%
            yaxis = list(title="Million 60kg bags", zeroline = FALSE),
            xaxis = list(title="", zeroline = FALSE),
            font = list(family = "sans-serif", color = "#515151"),
-           margin = list(b = 40))
+           margin = list(b = 50))
 ```
 
-In Vietnam, the industry is further squeezed by the fact that coffee trees generally have an optimal lifespan of around 25 years. Much of Vietnam's current coffee area was planted in the early 1990s, which means that many of the trees are reaching the end of their productive capacity. Simply maintaining current output volumes will require significant investment in replanting and regeneration.
+In Vietnam, the industry is further squeezed by the fact that coffee trees generally have an optimal lifespan of around 25 years. Much of Vietnam's current coffee area was planted in the early 1990s, which means that many of the trees are reaching the end of their peak productive capacity. Simply maintaining current output volumes will require significant investment in replanting and regeneration.
 
 These recent developments show the implicit dangers of consolidation. The more the market depends on output from a small number of countries, the riskier the supply situation is, as a poor harvest from Brazil or Vietnam can have major consequences for the international market, much more than any other individual country.
 
@@ -345,4 +367,4 @@ In Indonesia, on the other hand, while output has generally been increasing, the
 
 ### Conclusions
 
-Vietnam isn't going to start producing more coffee than Brazil any time soon, but the fact that these two countries are increasingly crucial for keeping us supplied with coffee is a worrying trend. The high yields in both countries suggest that there is little opportunity to continue increasing output without expanding the growing area, particularly as the existing coffee trees reach their productive peak. Indeed, production growth in both countries has slowed over the last few years. As global demand for coffee keeps expanding, 
+Vietnam isn't going to start producing more coffee than Brazil any time soon, but the fact that these two countries are increasingly crucial for keeping us supplied with coffee is a worrying trend. The high yields in both countries suggest that there is little opportunity to continue increasing output without expanding the growing area, particularly as the existing coffee trees reach their productive peak. Indeed, production growth in both countries has slowed over the last few years. As global demand for coffee keeps expanding, competition for beans is likely to become more intense, but it's not clear who's going to supply the market. 
