@@ -1,15 +1,15 @@
 ---
 Categories:
     - Blog
-Description: "It's not far off, which could be a problem for the coffee industry."
+Description: "It's not far off, and this could be a problem for the coffee industry."
 Tags:
     - Coffee
 date: 2017-06-16
 thumbnail: "couldVietnam.png"
-title: "Could Vietnam become the world's main source of coffee?"
+title: "Could Vietnam overtake Brazil as the world's main source of coffee?"
 slug: "could-vietnam-become-number-1"
-draft: true
-summaryText: <p>In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil. <p><img src="/img/vnHeadlinesCollage2.png" /><p>This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?<p>
+draft: false
+summaryText: <p>In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil to become the world's top coffee exporter that month. <p><img src="/img/vnHeadlines.png" /><p>This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?<p>
 ---
 ```{r, include = FALSE}
 coffeestats <- "~/Dropbox/Work/coffeestats"
@@ -23,7 +23,7 @@ library(tabulizer);library(pdftools);library(stringr)
 
 In March of this year, Vietnam made headlines in the coffee industry by exporting more coffee than Brazil to become the world's top coffee exporter that month. 
 
-![vietnam-headlines](/img/vnHeadlinesCollage2.png)
+![vietnam-headlines](/img/vnHeadlines.png)
 
 This isn't the first time this has happened, but it's still surprising. Brazil is by far and away the largest coffee producer in the world, accounting for around a third of world production, while Vietnam generally produces about half as much. But Brazil also drinks a significant amount of coffee, in fact it's the second largest coffee consumer worldwide after the USA. This means that around 40% of the crop never leaves the country. In Vietnam, on other hand, while local consumption is generally increasing, it still only accounts for less than 10% of the total. Could Vietnam actually become the world's single largest supplier of coffee?
 
@@ -72,7 +72,7 @@ plot_ly() %>%
     add_lines(name = "Brazil", legendgroup = "Brazil",
               data = filter(splitLoess, country == "Brazil"),
               line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = blogColours[1]),
-              text = ~"Brazil", hoverinfo = "text",
+              text = ~"Brazil Trend", hoverinfo = "text",
               x = ~monthFac, y = ~.fitted) %>%
     ## Brazil confidence interval
     add_ribbons(data = filter(splitLoess, country == "Brazil"),
@@ -93,7 +93,7 @@ plot_ly() %>%
     add_lines(name = "Vietnam", legendgroup = "Vietnam",
               data = filter(splitLoess, country == "Vietnam"),
               line = list(shape = "spline", smoothing = 1.3, simplify = FALSE, color = blogColours[2]),
-              text = ~"Vietnam", hoverinfo = "text",
+              text = ~"Vietnam Trend", hoverinfo = "text",
               x = ~monthFac, y = ~.fitted) %>%
     ## Vietnam confidence interval
     add_ribbons(data = filter(splitLoess, country == "Vietnam"),
@@ -103,15 +103,15 @@ plot_ly() %>%
                  fillcolor = paste0(blogColours[2], "59"),
                ymin = ~.fitted - 1.96*.se.fit,
                 ymax = ~.fitted + 1.96*.se.fit) %>%
-    add_annotations(x = 1.15, y = -0.15, 
+    add_annotations(x = 1.15, y = -0.22, 
                     xref = "paper", yref = "paper", 
                     showarrow = F,
-                    xanchor = "right",
-                    text = "<i>Sources: UN Comtrade, General Department of Vietnam Customs, ICO</i>") %>%
+                    xanchor = "right", align = "right",
+                    text = "<i>Sources: UN Comtrade, General\nDepartment of Vietnam Customs, ICO</i>") %>%
     layout(title = "Average exports by Brazil and Vietnam",
            xaxis = list(title = "", showgrid = FALSE),
            yaxis = list(title = "Million 60kg bags"),
-           margin = list(b = 60),
+           margin = list(b = 66),
            font = list(color = "#515151", family = "sans-serif"))
 ```
 
@@ -353,7 +353,7 @@ subplot(pColIndo1, pColIndo2, nrows = 1, shareY = TRUE, shareX = TRUE, titleX = 
                     showarrow = F,
                     xanchor = "right",
                     text = "<i>Source: ICO</i>") %>%
-    layout(title = "Coffee consumption and production in Colombia and Indonesia",
+    layout(title = "Coffee fundamentals in Colombia and Indonesia",
            xaxis = list(title = "", showline = FALSE, showgrid = FALSE),
            yaxis = list(title = "Million 60kg bags", zeroline = FALSE),
            font = list(family = "sans-serif", color = "#515151"),
