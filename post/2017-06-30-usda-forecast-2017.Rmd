@@ -5,9 +5,9 @@ date: '2017-06-30'
 slug: 'usda-forecast-2017'
 categories: [Blog]
 tags: [Coffee]
-draft: true
+draft: false
 thumbnail: 'usdaForecast2017.png'
-summaryText: <p>Last week, the United States Department of Agriculture (USDA) released their biannual estimate of global supply and demand of coffee. This estimate contains a forecast for the upcoming 2017/18 coffee year, which starts in October, giving us an indication of where the coffee sector might be up to September 2018.<p>Obviously, much can change in that time, particularly as weather events become more unpredictable, but there are still some useful morsels to be found in the data.<p><img src="/img/coffee-stocks.png" alt="a stock photo of some coffee stocks" title="a stock photo of coffee stocks"/><p>
+summaryText: <p>Last week, the United States Department of Agriculture (USDA) released their twice-yearly estimate of global supply and demand of coffee. This estimate contains a forecast for the upcoming 2017/18 coffee year, which starts in October, giving us an indication of where the coffee sector might be going up to September 2018.<p>Obviously, much can change in that time, particularly as weather events become more unpredictable, but there are still some useful morsels to be found in the data.<p><img src="/img/coffee-stocks.png" alt="a stock photo of some coffee stocks" title="a stock photo of coffee stocks"/><p>
 ---
 
 ```{r setup, include=FALSE}
@@ -20,7 +20,7 @@ blogColours <- c("#619fb5", "#ef8066", "#ffcb90", "#70c793", "#7882c0")
 ```
 
 
-Last week, the United States Department of Agriculture (USDA) released their biannual estimate of global supply and demand of coffee. This estimate contains a forecast for the upcoming 2017/18 coffee year, which starts in October, giving us an indication of where the coffee sector might be going up to September 2018. 
+Last week, the United States Department of Agriculture (USDA) released their twice-yearly estimate of global supply and demand of coffee. This estimate contains a forecast for the upcoming 2017/18 coffee year, which starts in October, giving us an indication of where the coffee sector might be going up to September 2018. 
 
 Obviously, much can change in that time, particularly as weather events become more unpredictable, but there are still some useful morsels to be found in the data. 
 
@@ -60,9 +60,9 @@ However, this lack of change in the world total covers up some interesting dynam
 
 This drop in Arabica production could help support prices, which have been trading at 16-month lows this month, dragged down by broader commodity price swings and healthy current supply.
 
-The modest increase in coffee demand continues a seven-year streak of ever-higher consumption. Coffee has been on an incredible upward trajectory recently, with the rise of specialty coffee driving higher demand in North America and Europe, but most of the countries with large consumption increases are in East and Southeast Asia, including a huge rise in the Philippines. Brazil, the largest producer and second-largest consuming country has also been increasing significantly. 
+The modest increase in coffee demand continues a seven-year streak of ever-higher consumption. Coffee has been on an incredible upward trajectory recently, with the rise of specialty coffee driving higher demand in North America and Europe, but most of the countries with large consumption increases are in East and Southeast Asia, including a huge rise in the Philippines. Brazil, the largest producer and second-largest consuming country, has also been increasing significantly. 
 
-In relative terms, although the USA and the European Union (as a bloc) have both added around 3.5 million bags to their overall coffee consumption, this isn't a massive increase on their previous levels. The increases in East & Southeast Asia, on the other hand, suggest rapidly expanding markets. In fact the largest percentage increases in both production *and* consumption have come from China, although determining the accuracy of these figures would probably need some further study. 
+In relative terms, although the USA and the European Union (as a bloc) have both added around 3.5 million bags to their overall coffee consumption, this isn't a massive increase on their previous levels. The increases in East & Southeast Asia, on the other hand, suggest rapidly expanding markets. In fact the largest percentage increases in both consumption *and* production have come from China, although determining the accuracy of these figures would probably need some further study. 
 
 ```{r, include = F}
 library(leaflet);library(maps)
@@ -146,7 +146,7 @@ plot_ly() %>%
               data = stocksUse, x = ~year, y = ~stocks_use, type = "bar",
         text = ~paste0("(", lubridate::year(year), ") ", round(stocks_use, 1), " weeks"), 
         hoverinfo = "text",
-        marker = list(color = blogColours[1], opacity = 0.5)) %>% 
+        marker = list(color = blogColours[1]), opacity = 0.6) %>% 
     add_lines(name = "New York Arabica future prices",
               data = filter(futurePrices, date >= "2002-10-01", series == "arabica"),
               text = ~paste0("(", format(date, "%b-%y"), ") ", round(price, 2), " US cents/lb"),
@@ -170,8 +170,6 @@ plot_ly() %>%
            titlefont = list(color = "#515151", family = "Noto Sans, Open Sans", size = 15),
            legend = list(orientation = "h"),
            margin = list(r = 80))
-
-
 ```
 
 ### Conclusions
