@@ -1,10 +1,12 @@
 ---
 title: 'The coffee market in 2017: A first look'
+Description: "What can we learn from the USDA's coffee market forecast?"
 date: '2017-06-30'
 slug: 'usda-forecast-2017'
 categories: [Blog]
 tags: [Coffee]
 draft: true
+thumbnail: 'usdaForecast2017.png'
 summaryText: <p>Last week, the United States Department of Agriculture (USDA) released their biannual estimate of global supply and demand of coffee. This estimate contains a forecast for the upcoming 2017/18 coffee year, which starts in October, giving us an indication of where the coffee sector might be up to September 2018.<p>Obviously, much can change in that time, particularly as weather events become more unpredictable, but there are still some useful morsels to be found in the data.<p><img src="/img/coffee-stocks.png" alt="a stock photo of some coffee stocks" title="a stock photo of coffee stocks"/><p>
 ---
 
@@ -25,7 +27,7 @@ Obviously, much can change in that time, particularly as weather events become m
 ![a stock photo of coffee stocks](/img/coffee-stocks.png "a stock photo of some coffee stocks")
 
 ```{r, echo = FALSE}
-htmltools::HTML('<p class = "message">There are two main sources of publicly available statistics for the coffee sector: the USDA and the ICO (International Coffee Organization). The USDA is generally known for being on the higher side of production estimates, while the ICO is more conservative in its outlook and doesn\'t tend to release production forecasts. The truth, as usual, is probably somewhere in between. </p>')
+htmltools::HTML('<p class = "message">There are two main sources of publicly available statistics for the coffee sector: the USDA and the ICO (International Coffee Organization). The USDA is generally known for being on the higher side of production estimates, while the ICO is more conservative in its outlook and doesn\'t tend to release forecasts. The truth, as usual, is probably somewhere in between. </p>')
 ```
 
 ### Main results
@@ -54,13 +56,13 @@ plot_ly(p1 %>% group_by(series), x = ~year, y = ~value/1000,
            legend = list(orientation="h", xanchor="center", x = 0.5))
 ```
 
-However, this lack of change in the world total covers up some interesting dynamics. Firstly, the production of Arabica coffee, favoured by the specialty coffee sector, is estimated down by nearly 4%, while Robusta, the main source of instant coffee, is up by over 6%. This is mostly due to Brazil entering into an off-year in its biennial cycle, where high output one year is followed by a smaller year as the trees recover.
+However, this lack of change in the world total covers up some interesting dynamics. Firstly, the production of Arabica coffee, as favoured by the specialty coffee sector, is estimated down by nearly 4%, while Robusta, the main source of instant coffee, is up by over 6%. This is mostly due to Brazil entering into an off-year in its biennial cycle, where high output one year is followed by a smaller year as the trees recover.
 
 This drop in Arabica production could help support prices, which have been trading at 16-month lows this month, dragged down by broader commodity price swings and healthy current supply.
 
 The modest increase in coffee demand continues a seven-year streak of ever-higher consumption. Coffee has been on an incredible upward trajectory recently, with the rise of specialty coffee driving higher demand in North America and Europe, but most of the countries with large consumption increases are in East and Southeast Asia, including a huge rise in the Philippines. Brazil, the largest producer and second-largest consuming country has also been increasing significantly. 
 
-In relative terms, although the USA and the European Union (as a bloc) have both added around 3.5 million bags to their overall coffee consumption, this isn't a massive increase on their previous levels. The increases in East & Southeast Asia, on the other hand, suggest rapidly expanding markets. In fact the largest percentage increases in both production and consumption have come from *China*, although the accuracy of these figures is debatable. 
+In relative terms, although the USA and the European Union (as a bloc) have both added around 3.5 million bags to their overall coffee consumption, this isn't a massive increase on their previous levels. The increases in East & Southeast Asia, on the other hand, suggest rapidly expanding markets. In fact the largest percentage increases in both production *and* consumption have come from China, although determining the accuracy of these figures would probably need some further study. 
 
 ```{r, include = F}
 library(leaflet);library(maps)
@@ -175,12 +177,3 @@ plot_ly() %>%
 ### Conclusions
 
 The USDA forecast doesn't raise any immediate causes for alarm, but the warning signs are there. Production is currently predicted to cover demand, but if there are any disruptions over the course of the next 15 months, such as frost, drought or excess rains, then this optimistic view could quickly change. The stocks which are currently providing a buffer against short-term supply fluctuations could quickly evaporate, resulting in a desperate scramble for availability. 
-
-
-
-
-
-
-
-
-
