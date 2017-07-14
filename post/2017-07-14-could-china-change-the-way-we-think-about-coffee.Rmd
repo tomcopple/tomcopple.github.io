@@ -3,10 +3,11 @@ title: Could China change the way we think about coffee?
 description: We need to start including China in our analysis before it's too late. 
 date: '2017-07-14'
 slug: coffee-china
-categories: []
-tags: []
+thumbnail: coffeeChina.png
+categories: [Blog]
+tags: [Coffee]
 draft: true
-summaryText: <p>China might not be the first country you think of when it comes to coffee, but its influence is growing. It might not come as a surprise that as China develops it’s drinking more coffee, you might not expect it to be one of the world’s major producers. While data can be hard to come by, it seems that China has been investing significantly in the coffee sector, and could soon be a major player.</p>
+summaryText: <p>China might not be the first country you think of when it comes to coffee, but its influence is growing. While it might not come as a surprise that as China develops it’s drinking more coffee, you might not expect it to be one of the world’s major producers. China is rapidly becoming a force on the global coffee economy, but we don't seem to know much about it.</p><p><img src="/img/coffeeChinaBanner.png" alt="coffee-china-banner" title="Could China change the way we think about coffee?"/><p>
 ---
 
 ```{r setup, include = FALSE}
@@ -73,9 +74,10 @@ map2 %>%
     addLayersControl(baseGroups = ~c('2016', '2015', '2014', '2013'),
                      options = layersControlOptions(collapsed = FALSE)) %>% 
     addLegend(
-        position = "topleft",
+        position = "bottomleft",
         colors = NULL, labels = NULL,
-        title = "Starbucks stores worldwide, grouped by city (China in red)")
+        title = htmltools::HTML("<p>Starbucks stores worldwide, grouped by city (China in red)</p><small><em>Data via <a href='https://github.com/chrismeller/StarbucksLocations' target = '_blank'>Chris Meller</a>")
+    )
 ```
 
 Starbucks opened their first store in the Chinese mainland in 1999, and since 2012 has opened on average more than one new store every day. China is now Starbucks's largest market outside of the US, and with the number of stores expected to double by 2021, ex-CEO Howard Schultz expects China to be a larger market than the US in the next four years. By the end of last year, there were more than 40 cities in China with over 10 Starbucks stores (I know this because I had to transcribe all of them by hand): 
