@@ -6,7 +6,7 @@ slug: coffee-china
 thumbnail: coffeeChina.png
 categories: [Blog]
 tags: [Coffee]
-draft: true
+draft: false
 summaryText: <p>China might not be the first country you think of when it comes to coffee, but its influence is growing. It's no surprise that as China develops it's drinking more coffee, but its potential to be one of the world's major producers is less well known. China is rapidly becoming a force on the global coffee economy, but we don't seem to know much about it. </p><p><img src="/img/coffeeChinaBanner.png" alt="coffee-china-banner" title="Could China change the way we think about coffee?"/><p>
 ---
 
@@ -203,12 +203,12 @@ brl %>%
     add_lines(name = "Coffee prices", y = ~price, line = list(color = blogColours[1]),
               yaxis = "y2",
               text = ~paste0(scales::ordinal(lubridate::day(date)),
-                             format(date, " %b %Y"), ": R$", round(price, 2)),
+                             format(date, " %b %Y"), ": ", round(price, 2), " US cents/lb"),
               hoverinfo = "text") %>%
     add_lines(name = "USD/BRL exchange rate", y = ~BRL, 
               line = list(color = blogColours[2]),
               text = ~paste0(scales::ordinal(lubridate::day(date)),
-                             format(date, " %b %Y"), ": ", round(BRL, 2), " US cents/lb"),
+                             format(date, " %b %Y"), ": R$", round(BRL, 2)),
               hoverinfo = "text") %>% 
     layout(
         title = "Coffee prices and the Brazilian real exchange rate",
