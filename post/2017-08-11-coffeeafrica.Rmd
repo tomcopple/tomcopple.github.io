@@ -5,7 +5,7 @@ date: '2017-08-11'
 slug: coffee-africa
 categories: [Blog]
 tags: [Coffee]
-draft: true
+draft: false
 summaryText: <p>An article in Bloomberg last week called <a href = 'https://www.bloomberg.com/news/articles/2017-08-01/trendy-coffee-at-4-a-cup-revives-african-industry-left-behind-j5u6te3n' target = '_blank'>Hip Coffee at $4 a Cup Revives African Industry Left Behind</a> observed that the growing interest in niche, single-origin coffees is helping to revive the African coffee sector:</p><blockquote class='blockquote'><p><i class = 'fa fa-quote-left' aria-hidden = 'true'></i>  Customers willing to pay a premium for African brews, known for their floral, fruity flavors, are driving purchases of coffee from the continent where the drink is said to have originated. <i class = 'fa fa-quote-right' aria-hidden = 'true'></i></p></blockquote><p>This spurred a number of similar articles to make ever more optimistic claims like <a href = 'http://www.foodandwine.com/news/coffee-sales-african-economy' target = '_blank'>Third Wave Coffee Could Keep Africa's Smaller Growers in Business</a>, <a href='http://sprudge.com/african-coffee-on-the-rise-thanks-to-specialty-coffee-124468.html' target='_blank'>African Coffee On The Rise Thanks To Specialty Coffee</a> and, my personal favourite, <a href='http://www.grubstreet.com/2017/08/report-african-coffee-industry-rebounding.html' target = '_blank'>Hipster Demand for Fancy Coffee Is Really Helping Africa's Farmers</a>.</p><p>Before us fancy coffee drinkers get too self-congratulatory, it's worth looking at the situation in a little more detail.</p>
 thumbnail: coffeeAfrica.png
 ---
@@ -153,7 +153,7 @@ plot_ly(graph2data, x = ~year) %>%
 
 ### Where do the benefits go?
 
-The increased interest in single-origin coffee might have the potential to raise demand for African coffee, but we need to be careful becoming over-confident in ascribing any benefits from this. The fact remains that the vast majority of value in the coffee sector comes in the processing and retail of coffee, which mostly occurs in non-producing countries. For example, looking at customs data on the coffee trade between the European Union and Africa shows a very different picture. Coffee imports from Africa are almost entirely green, unprocessed coffee. Exports back in the other direction, on the other hand, are mostly processed products, either roasted or soluble (instant) coffee. In many producing countries, it's not uncommon to be offered a cup of Nescafé rather than a local equivalent. 
+The increased interest in single-origin coffee might have the potential to raise demand for African coffee, but we need to be careful becoming over-confident in ascribing any benefits from this. The fact remains that the vast majority of value in the coffee sector comes in the processing and retail of coffee, which mostly occurs in non-producing countries. For example, looking at customs data on the coffee trade between the European Union and Africa shows a very different picture. Coffee imports from Africa are almost entirely green, unprocessed coffee. Exports back in the other direction, on the other hand, are mostly processed products, either roasted or soluble (instant) coffee. This trade imbalance affects the local market too - in many producing countries, it's not uncommon to be offered an imported cup of Nescafé rather than a local equivalent. 
 
 ```{r, include = FALSE}
 euroAf2 <- read_csv(file.path(coffeeAfrica, "euroAfrica2.csv"))
@@ -224,7 +224,9 @@ subplot(p1, p2, margin = 0.05, nrows = 1, shareY = FALSE, shareX = FALSE) %>%
         xaxis2 = list(title = "", showgrid = FALSE, nticks = 3),
         yaxis = list(title = "Million €", zeroline = FALSE),
         yaxis2 = list(title = "", zeroline = FALSE),
-        legend = list(orientation = "h", x = 0.5, xanchor = "center"),
+        legend = list(orientation = "h", x = 0.5, xanchor = "center"),            
+        font = list(color = "#515151", family = "'Noto Sans', verdana, arial"),
+        titlefont = list(size = 15),
         margin = list(b = 80)
     )
 ```
