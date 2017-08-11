@@ -1,13 +1,13 @@
 ---
 title: Will the future of African coffee be found in specialty?
-description: We're going to need a bigger something
+description: It's going to take more than just flat whites. 
 date: '2017-08-11'
 slug: coffee-africa
 categories: [Blog]
 tags: [Coffee]
 draft: true
-summaryText: <p>
-thumbnail: NULL
+summaryText: <p>An article in Bloomberg last week called <a href = 'https://www.bloomberg.com/news/articles/2017-08-01/trendy-coffee-at-4-a-cup-revives-african-industry-left-behind-j5u6te3n' target = '_blank'>Hip Coffee at $4 a Cup Revives African Industry Left Behind</a> observed that the growing interest in niche, single-origin coffees is helping to revive the African coffee sector:</p><blockquote class='blockquote'><p><i class = 'fa fa-quote-left' aria-hidden = 'true'></i>  Customers willing to pay a premium for African brews, known for their floral, fruity flavors, are driving purchases of coffee from the continent where the drink is said to have originated. <i class = 'fa fa-quote-right' aria-hidden = 'true'></i></p></blockquote><p>This spurred a number of similar articles to make ever more optimistic claims like <a href = 'http://www.foodandwine.com/news/coffee-sales-african-economy' target = '_blank'>Third Wave Coffee Could Keep Africa's Smaller Growers in Business</a>, <a href='http://sprudge.com/african-coffee-on-the-rise-thanks-to-specialty-coffee-124468.html' target='_blank'>African Coffee On The Rise Thanks To Specialty Coffee</a> and, my personal favourite, <a href='http://www.grubstreet.com/2017/08/report-african-coffee-industry-rebounding.html' target = '_blank'>Hipster Demand for Fancy Coffee Is Really Helping Africa's Farmers</a>.</p><p>Before us fancy coffee drinkers get too self-congratulatory, it's worth looking at the situation in a little more detail.</p>
+thumbnail: coffeeAfrica.png
 ---
 
 ```{r setup, include = FALSE}
@@ -17,9 +17,9 @@ library(tidyverse);library(coffeestats);library(plotly)
 coffeeAfrica <- "~/Dropbox/Work/coffeestats/projects/coffeeAfrica"
 ```
 
-An article in Bloomberg last week called *Hip Coffee at $4 a Cup Revives African Industry Left Behind* observed that the growing interest in niche, single-origin coffees is helping to revive the African coffee sector:
+An article in Bloomberg last week called `r htmltools::HTML("<a href = 'https://www.bloomberg.com/news/articles/2017-08-01/trendy-coffee-at-4-a-cup-revives-african-industry-left-behind-j5u6te3n' target = '_blank'>Hip Coffee at $4 a Cup Revives African Industry Left Behind</a>")` observed that the growing interest in niche, single-origin coffees is helping to revive the African coffee sector:
 
-> `r htmltools::HTML("<i class = 'fa fa-quote-left' aria-hidden = 'true'></i>")` Customers willing to pay a premium for African brews, known for their floral, fruity flavors, are driving purchases of coffee from the continent where the drink is said to have originated. `r htmltools::HTML("<i class = 'fa fa-quote-right' aria-hidden = 'true'></i>")`
+> `r htmltools::HTML("<i class = 'fa fa-quote-left' aria-hidden = 'true'></i>")`  Customers willing to pay a premium for African brews, known for their floral, fruity flavors, are driving purchases of coffee from the continent where the drink is said to have originated. `r htmltools::HTML("<i class = 'fa fa-quote-right' aria-hidden = 'true'></i>")`
 
 This spurred a number of similar articles to make ever more optimistic claims like [Third Wave Coffee Could Keep Africa's Smaller Growers in Business](http://www.foodandwine.com/news/coffee-sales-african-economy), [African Coffee On The Rise Thanks To Specialty Coffee](http://sprudge.com/african-coffee-on-the-rise-thanks-to-specialty-coffee-124468.html) and, my personal favourite, [Hipster Demand for Fancy Coffee Is Really Helping Africa's Farmers](http://www.grubstreet.com/2017/08/report-african-coffee-industry-rebounding.html). 
 
@@ -29,7 +29,7 @@ Before us fancy coffee drinkers get too self-congratulatory, it's worth looking 
 
 As the Bloomberg article rightly points out, the African coffee sector has not been thriving in recent years. Total production this year was just over 16 million bags, little changed on its volume in 1990. At the same time, most other regions have increased their output, particularly countries in Asia. 
 
-If we go back further, we can see that the share of coffee exports originating in Africa have massively tailed off, from over a third of the world total in 1973, when 4 countries from Africa were among the world's top ten producers, to under 10% today. 
+If we go back further, we can see that the share of coffee exports originating from Africa have massively tailed off, from over a third of the world total in 1973, when 4 African countries were among the world's top ten producers, to under 10% today. 
 
 ```{r, include = FALSE}
 coffeestats::loadUSDA()
@@ -87,13 +87,13 @@ plot_ly(graph1, x = ~year, fill = "tozeroy") %>%
     )
 ```
 
-There are many reasons for this decline; the 1980s and 1990s saw a global move towards deregulation and market liberalism, which resulted in the dismantling of state coffee institutions in many African producing countries. The collapse of the International Coffee Agreement in 1989 also seemed to affect Africa more than any other producing region, with growth falling by an average of -0.6% per year since then. Logistical challenges have also affected production growth, with high transportation and production costs putting farmers at a disadvantage. 
+There are many reasons for this decline; the 1980s and 1990s saw a global move towards deregulation and market liberalism, which resulted in the dismantling of state coffee institutions in many African producing countries. The collapse of the International Coffee Agreement in 1989 seemed to affect Africa more than any other producing region, with growth falling by an average of -0.6% per year since then. Logistical challenges have also affected production growth, with high transportation and production costs putting farmers at a disadvantage. 
 
 ### Situation today?
 
 Is the rise of specialty coffee really driving a resurgence in African coffee? One of the most successful producers is Uganda, who have nearly doubled production since 1990. But Uganda is mostly a Robusta producer, and unlikely to be selling to the specialty market. Output from Kenya, on other hand, is just half of its level 25 years ago, as are smaller Arabica producers like Burundi and Rwanda. 
 
-The strongest case for this argument might be Ethiopia, where production has jumped from 3 million bags in 2000 to over 6 million today, coinciding with the recent rise of specialty coffee. The inherent variety of indigenous Ethiopian coffee is also very appealing to fans of single-origin beans, and could provide a lucrative channel for further development. However, the prospects for Ethiopian coffee are worrying - recent studies suggest that up to xx% of the coffee area could become intolerant for coffee as the climate changes. The introduction of the Ethiopian Commodity Exchange (ECX) in 2008 was also unpopular with the specialty coffee trade, making it harder to identify and trace small lots, though last month the Ethiopian government agreed to improve its traceability on the Exchange. 
+The strongest case for this argument might be Ethiopia, where production has jumped from 3 million bags in 2000 to over 6 million today, coinciding with the recent rise of specialty coffee. The inherent variety of indigenous Ethiopian coffee is also very appealing to fans of single-origin beans, and could provide a lucrative channel for further development. However, the prospects for Ethiopian coffee are worrying - recent studies suggest that up to 50% of the current coffee area could become intolerant for coffee as the climate changes. The introduction of the Ethiopian Commodity Exchange (ECX) in 2008 was met with some skepticism by the specialty coffee trade, making it harder to identify and trace small lots, though last month the Ethiopian government agreed to [improve its traceability on the Exchange](https://www.ft.com/content/020bc846-393a-11e7-821a-6027b8a20f23). This reform was specifically designed to target higher quality consumption markets.  
 
 ```{r, include = FALSE}
 coffeestats::loadICOhistorical()
@@ -153,7 +153,7 @@ plot_ly(graph2data, x = ~year) %>%
 
 ### Where do the benefits go?
 
-The increased interest in single-origin coffee might have the potential to raise demand for African coffee, but we need to be careful becoming over-confident in ascribing any benefits from this. The fact remains that the vast majority of value in the coffee sector comes in the processing and retail of coffee, which mostly occurs in non-producing countries. For example, looking at customs data on the coffee trade between the European Union and Africa shows a very different picture. Coffee imports from Africa are almost entirely green, unprocessed coffee. Exports back in the other direction, on the other hand, are mostly processed products, either roasted or soluble (instant) coffee. 
+The increased interest in single-origin coffee might have the potential to raise demand for African coffee, but we need to be careful becoming over-confident in ascribing any benefits from this. The fact remains that the vast majority of value in the coffee sector comes in the processing and retail of coffee, which mostly occurs in non-producing countries. For example, looking at customs data on the coffee trade between the European Union and Africa shows a very different picture. Coffee imports from Africa are almost entirely green, unprocessed coffee. Exports back in the other direction, on the other hand, are mostly processed products, either roasted or soluble (instant) coffee. In many producing countries, it's not uncommon to be offered a cup of Nescafé rather than a local equivalent. 
 
 ```{r, include = FALSE}
 euroAf2 <- read_csv(file.path(coffeeAfrica, "euroAfrica2.csv"))
@@ -231,4 +231,4 @@ subplot(p1, p2, margin = 0.05, nrows = 1, shareY = FALSE, shareX = FALSE) %>%
 
 ### Conclusions
 
-While specialty coffee might offer the potential for a revival in African coffee production, it's far from certain that this is going to happen. The challenges and declines in countries like Kenya are still present, while even high-performing origins like Ethiopia are facing significant obstacles in the future. While the opportunity might be there, it doesn't mean that it will be fulfilled. 
+While specialty coffee might offer the potential for a revival in African coffee production, it's far from certain that this is going to happen. The challenges and declines in countries like Kenya are still present, while even high-performing origins like Ethiopia are facing significant obstacles in the future. While the opportunity might be there, it's a little premature to take it for granted. 
